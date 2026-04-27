@@ -21,11 +21,6 @@ function AddMovieModal({ isActive, onClose }) {
                     </div>
 
                     <div className="form-group">
-                        <label>Description</label>
-                        <textarea rows="3" placeholder="Enter movie description..."></textarea>
-                    </div>
-
-                    <div className="form-group">
                         <label>Poster (16:9)</label>
                         <input type="url" placeholder="Poster image link" />
                         <div className="poster-preview">

@@ -85,7 +85,6 @@ label {
 }
 
 input,
-textarea,
 select {
     background: #0a0a0a;
     border: 1px solid #222;
@@ -98,13 +97,8 @@ select {
 }
 
 input:focus,
-textarea:focus,
 select:focus {
     border-color: $primary-color;
-}
-
-textarea {
-    resize: none;
 }
 
 .grid-2 {

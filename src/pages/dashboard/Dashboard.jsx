@@ -63,7 +63,7 @@ function Dashboard() {
                     </div> */}
 
                         <div className="empty-state" style={{ gridColumn: "1 / -1", width: "100%" }}>
-                            <div className="empty-state-icon"><i class='fas fa-folder'></i></div>
+                            <div className="empty-state-icon"><i className='fas fa-folder'></i></div>
                             <h3 className="empty-state-title">No Uploads Yet</h3>
                             <p className="empty-state-message">Be the first to upload content. Your uploaded files will appear here.</p>
                         </div>

@@ -1,5 +1,8 @@
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import '../styles/sidebar.scss';
+import logout from '../utils/logout.js';
 
 function Sidebar({ active }) {
     return (
@@ -38,7 +41,7 @@ function Sidebar({ active }) {
                     <i className="fas fa-users"></i>
                     <span>Users</span>
                 </NavLink>
-                <NavLink to="/logout" className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}>
+                <NavLink to="/login" className="nav-item" onClick={() => logout(toast)}>
                     <i className="fas fa-sign-out"></i>
                     <span>Logout</span>
                 </NavLink>
