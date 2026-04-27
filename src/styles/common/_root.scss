@@ -1,4 +1,5 @@
 @import './variables';
+@import './modal';
 
 * {
     margin: 0;
@@ -11,4 +12,53 @@ body {
     background-color: $bg-darker !important;
     color: $text-color !important;
     height: 100vh;
+}
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-family: "Oswald", sans-serif;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.action-btn.primary {
+    background-color: $secondary-color;
+    color: black;
+}
+
+.action-btn.primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn.cancel {
+    background: #222;
+    color: #aaa;
+}
+
+.btn.cancel:hover {
+    background: #333;
+}
+
+.btn.submit {
+    background: #9ee600;
+    color: #000;
+}
+
+.btn.submit:hover {
+    background: #8dc500;
+    color: #000;
 }
