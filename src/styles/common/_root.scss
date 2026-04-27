@@ -1,0 +1,14 @@
+@import './variables';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Oswald', sans-serif;
+    background-color: $bg-darker !important;
+    color: $text-color !important;
+    height: 100vh;
+}
