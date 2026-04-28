@@ -19,8 +19,6 @@
 }
 
 .search-filter {
-    display: flex;
-    gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
@@ -54,7 +52,6 @@
     border-radius: 4px;
     color: white;
     font-family: "Roboto Condensed", sans-serif;
-    min-width: 150px;
 }
 
 .movie-table-container {
@@ -101,6 +98,7 @@
     align-items: center;
     justify-content: center;
     width: 32px;
+    border: none;
     height: 32px;
     border-radius: 50%;
     margin-right: 0.5rem;

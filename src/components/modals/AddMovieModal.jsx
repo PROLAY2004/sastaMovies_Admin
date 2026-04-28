@@ -1,7 +1,54 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import uploadMovie from '../../pages/movies/addMovie.js';
 
 
 function AddMovieModal({ isActive, onClose }) {
+    const navigate = useNavigate();
+    const [imdbLink, setImdbLink] = useState("");
+    const [posterLink, setPosterLink] = useState("");
+    const [baseUrl, setBaseUrl] = useState("");
+    const [totalChunks, setTotalChunks] = useState("");
+    const [totalSize, setTotalSize] = useState("");
+    const [mimeType, setMimeType] = useState("MP4");
+    const [subtitleLink, setSubtitleLink] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const resetForm = () => {
+        setImdbLink("");
+        setPosterLink("");
+        setBaseUrl("");
+        setTotalChunks("");
+        setTotalSize("");
+        setMimeType("MP4");
+        setSubtitleLink("");
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        const movieData = {
+            imdbLink,
+            posterLink,
+            baseUrl,
+            totalChunks,
+            totalSize,
+            mimeType,
+            subtitleLink
+        };
+
+
+        const isSuccess = await uploadMovie(movieData, navigate, toast);
+        setLoading(false);
+
+        if (isSuccess) {
+            onClose();
+            resetForm();
+        }
+    };
 
     return (
         <div className={isActive ? " modal-overlay active" : " modal-overlay"}>
@@ -13,42 +60,72 @@ function AddMovieModal({ isActive, onClose }) {
                     </span>
                 </div>
 
-                <form className="modal-form">
+                <form className="modal-form" onSubmit={handleSubmit}>
 
                     <div className="form-group">
                         <label>IMDB Link</label>
-                        <input type="url" placeholder="https://www.imdb.com/title/..." />
+                        <input
+                            type="url"
+                            placeholder="https://www.imdb.com/title/..."
+                            value={imdbLink}
+                            onChange={(e) => setImdbLink(e.target.value)}
+                        />
                     </div>
 
                     <div className="form-group">
                         <label>Poster (16:9)</label>
-                        <input type="url" placeholder="Poster image link" />
-                        <div className="poster-preview">
-                            <span>Preview</span>
+                        <input
+                            type="url"
+                            placeholder="Poster image link"
+                            value={posterLink}
+                            onChange={(e) => setPosterLink(e.target.value)} />
+
+                        <div className="poster-preview" style={{
+                            display: posterLink ? 'block' : 'none',
+                            backgroundImage: `url(${posterLink})`,
+                            backgroundSize: 'contain',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center'
+                        }}>
                         </div>
                     </div>
 
                     <div className="form-group">
                         <label>Base URL</label>
-                        <input type="url" placeholder="Enter base URL for chunks" />
+                        <input
+                            type="url"
+                            placeholder="Enter base URL for chunks"
+                            value={baseUrl}
+                            onChange={(e) => setBaseUrl(e.target.value)}
+                        />
                     </div>
 
                     <div className="grid-2">
                         <div className="form-group">
                             <label>Total Chunks</label>
-                            <input type="text" placeholder="e.g. 120" />
+                            <input
+                                type="text"
+                                placeholder="e.g. 120"
+                                value={totalChunks}
+                                onChange={(e) => setTotalChunks(e.target.value)}
+                            />
                         </div>
 
                         <div className="form-group">
                             <label>Total Size (KB)</label>
-                            <input type="text" placeholder="e.g. 2048000" />
+                            <input
+                                type="text"
+                                placeholder="e.g. 2048000"
+                                value={totalSize}
+                                onChange={(e) => setTotalSize(e.target.value)}
+                            />
                         </div>
                     </div>
 
                     <div className="grid-2">
                         <div className="form-group">
                             <label>Mime Type</label>
-                            <select>
+                            <select value={mimeType} onChange={(e) => setMimeType(e.target.value)}>
                                 <option>MP4</option>
                                 <option>MKV</option>
                                 <option>WEBM</option>
@@ -57,19 +134,28 @@ function AddMovieModal({ isActive, onClose }) {
 
                         <div className="form-group">
                             <label>Subtitle (Optional)</label>
-                            <input type="url" placeholder="Subtitle file link" />
+                            <input type="url" placeholder="Subtitle file link" value={subtitleLink} onChange={(e) => setSubtitleLink(e.target.value)} />
                         </div>
                     </div>
 
                     <div className="modal-actions">
-                        <button type="button" className="btn cancel" onClick={onClose}>
+                        <button type="button" className="btn cancel" onClick={() => { onClose(); resetForm(); }}>
                             Cancel
                         </button>
-                        <button type="submit" className="btn submit">
-                            Add Movie
+                        <button disabled={loading} className="btn submit" type="submit">
+                            {loading ? (
+                                <>
+                                    <div
+                                        className="spinner-border text-dark"
+                                        role="status"
+                                        style={{ width: '20px', height: '20px' }}></div>{' '}
+                                    Adding Movie...
+                                </>
+                            ) : (
+                                'Add Movie'
+                            )}
                         </button>
                     </div>
-
                 </form>
             </div>
         </div>
