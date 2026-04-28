@@ -1,0 +1,70 @@
+/* Container */
+.skeleton-table {
+    margin-top: 20px;
+}
+
+/* Header */
+.skeleton-table-header {
+    display: grid;
+    grid-template-columns: 120px repeat(5, 1fr) 120px;
+    gap: 16px;
+    padding: 14px;
+    background: #2a2a2a;
+    border-radius: 6px;
+}
+
+/* Rows */
+.skeleton-row {
+    display: grid;
+    grid-template-columns: 120px repeat(5, 1fr) 120px;
+    gap: 16px;
+    align-items: center;
+    padding: 14px;
+    border-bottom: 1px solid #1f1f1f;
+}
+
+/* Skeleton Base */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: #1a1a1a;
+    border-radius: 6px;
+}
+
+/* Shine Animation */
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150px;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+    100% {
+        left: 100%;
+    }
+}
+
+/* Variants */
+.th {
+    height: 14px;
+}
+
+.poster {
+    height: 60px;
+    border-radius: 8px;
+}
+
+.text {
+    height: 14px;
+}
+
+.actions {
+    height: 30px;
+    width: 80px;
+    border-radius: 20px;
+}

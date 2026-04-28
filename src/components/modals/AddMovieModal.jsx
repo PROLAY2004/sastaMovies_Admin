@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import uploadMovie from '../../pages/movies/addMovie.js';
 
 
-function AddMovieModal({ isActive, onClose }) {
+function AddMovieModal({ isActive, onClose, refresh }) {
     const navigate = useNavigate();
     const [imdbLink, setImdbLink] = useState("");
     const [posterLink, setPosterLink] = useState("");
@@ -47,6 +47,7 @@ function AddMovieModal({ isActive, onClose }) {
         if (isSuccess) {
             onClose();
             resetForm();
+            refresh((prev) => prev + 1);
         }
     };
 
