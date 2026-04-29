@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function MovieList({ movieData }) {
+function MovieList({ movieData, onEdit, setMovie }) {
     return (
         <tr>
             <td>
@@ -12,7 +12,7 @@ function MovieList({ movieData }) {
             <td>{movieData.rating}</td>
             <td>{movieData.runtime}</td>
             <td className="action-cell">
-                <button className="action-icon edit">
+                <button className="action-icon edit" onClick={() => { setMovie(movieData); onEdit(true); }}>
                     <i className="fas fa-edit"></i>
                 </button>
                 <button className="action-icon delete">

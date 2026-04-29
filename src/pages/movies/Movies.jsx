@@ -7,6 +7,7 @@ import '../../styles/movies.scss';
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
 import AddMovieModal from '../../components/modals/AddMovieModal.jsx';
+import EditMovieModal from "../../components/modals/EditMovieModal.jsx";
 import DeleteModal from '../../components/modals/DeleteModal.jsx';
 import MovieList from '../../components/MovieList.jsx';
 import ListLoader from '../../components/ListLoader.jsx';
@@ -17,11 +18,13 @@ function Movies() {
     const [sidebarActive, setSidebarActive] = useState(false);
     const [addModalActive, setAddModalActive] = useState(false);
     const [deleteModalActive, setDeleteModalActive] = useState(false);
+    const [editModalActive, setEditModalActive] = useState(false);
 
     // Data states
     const [movies, setMovies] = useState([]);
     const [genres, setGenres] = useState([]);
     const [years, setYears] = useState([]);
+    const [movieDetails, setMovieDetails] = useState({});
 
     // Filter and Pagination states
     const [searchQuery, setSearchQuery] = useState("");
@@ -157,7 +160,7 @@ function Movies() {
                         </thead>
                         <tbody>
                             {movies.map((movie) => (
-                                <MovieList movieData={movie} key={movie._id} />
+                                <MovieList movieData={movie} key={movie._id} onEdit={setEditModalActive} setMovie={setMovieDetails} />
                             ))}
                         </tbody>
                     </table>
@@ -204,6 +207,12 @@ function Movies() {
                 )}
 
                 <AddMovieModal isActive={addModalActive} onClose={() => setAddModalActive(false)} refresh={setPageReload} />
+                <EditMovieModal
+                    isActive={editModalActive}
+                    onClose={() => setEditModalActive(false)}
+                    movieData={movieDetails}
+                    refresh={setPageReload}
+                />
                 <DeleteModal isActive={deleteModalActive} onClose={() => setDeleteModalActive(false)} />
             </main>
         </div>

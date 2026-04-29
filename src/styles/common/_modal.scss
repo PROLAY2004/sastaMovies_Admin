@@ -44,7 +44,6 @@
     background: $primary-color;
 }
 
-
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -57,15 +56,6 @@
     font-weight: 500;
 }
 
-.close-btn {
-    font-size: 30px;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.close-btn:hover {
-    color: #fff;
-}
 
 .modal-form {
     display: flex;
@@ -153,13 +143,4 @@ select:focus {
 .delete-warning {
     font-size: 13px;
     color: #ff4d4d;
-}
-
-.btn.danger {
-    background: #ff4d4d;
-    color: #fff;
-}
-
-.btn.danger:hover {
-    background: #ff6666;
 }
