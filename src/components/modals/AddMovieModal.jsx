@@ -56,7 +56,7 @@ function AddMovieModal({ isActive, onClose, refresh }) {
             <div className="custom-modal add-modal">
                 <div className="modal-header">
                     <h2>Add Movie</h2>
-                    <span className="close-btn" onClick={onClose}>
+                    <span className="close-btn" onClick={() => { onClose(); resetForm(); }}>
                         &times;
                     </span>
                 </div>

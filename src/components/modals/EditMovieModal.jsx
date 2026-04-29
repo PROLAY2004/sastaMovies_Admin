@@ -21,17 +21,16 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
 
     // 2. Watch for changes in movieData and update local form states
     useEffect(() => {
-
-        setImdbLink(movieData.imdbId ? `https://www.imdb.com/title/${movieData.imdbId}/` : (movieData.imdbLink || ""));
-        // Handles nested posterUrl object (based on your MovieList.jsx) or fallback
-        setPosterLink(movieData.posterUrl?.horizontal || movieData.posterLink || "");
-        setBaseUrl(movieData.baseUrl || "");
-        setTotalChunks(movieData.chunkCount || "");
-        setTotalSize(movieData.size_kb || "");
-        setMimeType(movieData.mimeType ? movieData.mimeType.toLowerCase() : "");
-        setSubtitleLink(movieData.subtitleUrl || "");
-
-    }, [movieData]);
+        if (movieData && isActive) {
+            setImdbLink(movieData.imdbId ? `https://www.imdb.com/title/${movieData.imdbId}/` : (movieData.imdbLink || ""));
+            setPosterLink(movieData.posterUrl?.horizontal || movieData.posterLink || "");
+            setBaseUrl(movieData.baseUrl || "");
+            setTotalChunks(movieData.chunkCount || "");
+            setTotalSize(movieData.size_kb || "");
+            setMimeType(movieData.mimeType ? movieData.mimeType.toLowerCase() : "");
+            setSubtitleLink(movieData.subtitleUrl || "");
+        }
+    }, [movieData, isActive]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
