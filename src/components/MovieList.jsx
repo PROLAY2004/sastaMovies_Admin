@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function MovieList({ movieData, onEdit, setMovie }) {
+function MovieList({ movieData, onEdit, onDelete, setMovie, setDelete }) {
     return (
         <tr>
             <td>
@@ -15,7 +15,7 @@ function MovieList({ movieData, onEdit, setMovie }) {
                 <button className="action-icon edit" onClick={() => { setMovie(movieData); onEdit(true); }}>
                     <i className="fas fa-edit"></i>
                 </button>
-                <button className="action-icon delete">
+                <button className="action-icon delete" onClick={() => { onDelete(true); setDelete(movieData._id) }}>
                     <i className="fas fa-trash"></i>
                 </button>
             </td>

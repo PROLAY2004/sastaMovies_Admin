@@ -80,8 +80,11 @@ body {
     color: #fff;
 }
 
-.btn.danger:hover {
-    background: #ff6666;
+.btn.danger:hover,
+.btn.danger:active,
+.btn.danger:focus,
+.btn.danger:disabled {
+    background: #ff6666 !important;
 }
 
 .close-btn {

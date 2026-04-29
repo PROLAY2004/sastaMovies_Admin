@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import '../../styles/movies.scss';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
 import AddMovieModal from '../../components/modals/AddMovieModal.jsx';
-import EditMovieModal from "../../components/modals/EditMovieModal.jsx";
+import EditMovieModal from '../../components/modals/EditMovieModal.jsx';
 import DeleteModal from '../../components/modals/DeleteModal.jsx';
 import MovieList from '../../components/MovieList.jsx';
 import ListLoader from '../../components/ListLoader.jsx';
@@ -25,12 +25,13 @@ function Movies() {
     const [genres, setGenres] = useState([]);
     const [years, setYears] = useState([]);
     const [movieDetails, setMovieDetails] = useState({});
+    const [deleteId, setDeleteId] = useState('');
 
     // Filter and Pagination states
-    const [searchQuery, setSearchQuery] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
-    const [selectedGenre, setSelectedGenre] = useState("all");
-    const [selectedYear, setSelectedYear] = useState("all");
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [selectedGenre, setSelectedGenre] = useState('all');
+    const [selectedYear, setSelectedYear] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -60,7 +61,7 @@ function Movies() {
             genre: selectedGenre,
             year: selectedYear,
             page: currentPage,
-            limit: 5
+            limit: 5,
         };
 
         const movieData = await displayMovies(
@@ -71,7 +72,7 @@ function Movies() {
             setGenres,
             setYears,
             setLoading,
-            setTotalPages
+            setTotalPages,
         );
 
         if (movieData && movieData.movies.length === 0) {
@@ -91,12 +92,17 @@ function Movies() {
 
             <main className="admin-main">
                 <header className="header-group">
-                    <Hambargar toggle={() => setSidebarActive(!sidebarActive)} sidebarActive={sidebarActive} />
+                    <Hambargar
+                        toggle={() => setSidebarActive(!sidebarActive)}
+                        sidebarActive={sidebarActive}
+                    />
 
                     <div className="list-header">
                         <h1 className="list-title">Movie Library</h1>
                         <div className="list-actions">
-                            <button className="action-btn primary" onClick={() => setAddModalActive(true)}>
+                            <button
+                                className="action-btn primary"
+                                onClick={() => setAddModalActive(true)}>
                                 <i className="fas fa-plus"></i>
                                 Add Movie
                             </button>
@@ -120,11 +126,12 @@ function Movies() {
                             <select
                                 className="genre-filter w-100 h-100"
                                 value={selectedGenre}
-                                onChange={(e) => setSelectedGenre(e.target.value)}
-                            >
+                                onChange={(e) => setSelectedGenre(e.target.value)}>
                                 <option value="all">All Genres</option>
                                 {genres.map((genre) => (
-                                    <option value={genre} key={genre}>{genre}</option>
+                                    <option value={genre} key={genre}>
+                                        {genre}
+                                    </option>
                                 ))}
                             </select>
                         </div>
@@ -132,11 +139,12 @@ function Movies() {
                             <select
                                 className="year-filter w-100 h-100"
                                 value={selectedYear}
-                                onChange={(e) => setSelectedYear(e.target.value)}
-                            >
+                                onChange={(e) => setSelectedYear(e.target.value)}>
                                 <option value="all">All Years</option>
                                 {years.map((year) => (
-                                    <option value={year} key={year}>{year}</option>
+                                    <option value={year} key={year}>
+                                        {year}
+                                    </option>
                                 ))}
                             </select>
                         </div>
@@ -145,7 +153,9 @@ function Movies() {
 
                 <ListLoader loading={loading} />
 
-                <div className="movie-table-container mb-4" style={{ display: loading ? 'none' : 'block' }}>
+                <div
+                    className="movie-table-container mb-4"
+                    style={{ display: loading ? 'none' : 'block' }}>
                     <table className="movie-table">
                         <thead>
                             <tr>
@@ -160,27 +170,39 @@ function Movies() {
                         </thead>
                         <tbody>
                             {movies.map((movie) => (
-                                <MovieList movieData={movie} key={movie._id} onEdit={setEditModalActive} setMovie={setMovieDetails} />
+                                <MovieList
+                                    movieData={movie}
+                                    key={movie._id}
+                                    onEdit={setEditModalActive}
+                                    onDelete={setDeleteModalActive}
+                                    setMovie={setMovieDetails}
+                                    setDelete={setDeleteId}
+                                />
                             ))}
                         </tbody>
                     </table>
 
-                    <div className="empty-state mt-4" style={{ display: emptyState ? 'flex' : 'none' }}>
-                        <div className="empty-state-icon"><i className='fas fa-film'></i></div>
+                    <div
+                        className="empty-state mt-4"
+                        style={{ display: emptyState ? 'flex' : 'none' }}>
+                        <div className="empty-state-icon">
+                            <i className="fas fa-film"></i>
+                        </div>
                         <h3 className="empty-state-title">No Movies Found</h3>
-                        <p className="empty-state-message">We couldn't find any movies matching your search criteria.</p>
+                        <p className="empty-state-message">
+                            We couldn't find any movies matching your search criteria.
+                        </p>
                     </div>
                 </div>
 
                 {/* Pagination Rendering */}
-                {(!emptyState && !loading) && (
+                {!emptyState && !loading && (
                     <div className="pagination">
                         <button
                             className={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
-                            style={{ background: 'transparent', border: 'none' }}
-                        >
+                            style={{ background: 'transparent', border: 'none' }}>
                             <i className="fas fa-angle-left"></i>
                         </button>
 
@@ -189,31 +211,40 @@ function Movies() {
                                 key={i + 1}
                                 className={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
                                 onClick={() => setCurrentPage(i + 1)}
-                                style={{ background: 'transparent', border: 'none' }}
-                            >
+                                style={{ background: 'transparent', border: 'none' }}>
                                 {i + 1}
                             </button>
                         ))}
 
                         <button
                             className={`page-link ${currentPage === totalPages ? 'disabled' : ''}`}
-                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            onClick={() =>
+                                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                            }
                             disabled={currentPage === totalPages}
-                            style={{ background: 'transparent', border: 'none' }}
-                        >
+                            style={{ background: 'transparent', border: 'none' }}>
                             <i className="fas fa-angle-right"></i>
                         </button>
                     </div>
                 )}
 
-                <AddMovieModal isActive={addModalActive} onClose={() => setAddModalActive(false)} refresh={setPageReload} />
+                <AddMovieModal
+                    isActive={addModalActive}
+                    onClose={() => setAddModalActive(false)}
+                    refresh={setPageReload}
+                />
                 <EditMovieModal
                     isActive={editModalActive}
                     onClose={() => setEditModalActive(false)}
                     movieData={movieDetails}
                     refresh={setPageReload}
                 />
-                <DeleteModal isActive={deleteModalActive} onClose={() => setDeleteModalActive(false)} />
+                <DeleteModal
+                    isActive={deleteModalActive}
+                    onClose={() => setDeleteModalActive(false)}
+                    contentId={deleteId}
+                    refresh={setPageReload}
+                />
             </main>
         </div>
     );
