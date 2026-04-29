@@ -12,7 +12,7 @@ function AddMovieModal({ isActive, onClose, refresh }) {
     const [baseUrl, setBaseUrl] = useState("");
     const [totalChunks, setTotalChunks] = useState("");
     const [totalSize, setTotalSize] = useState("");
-    const [mimeType, setMimeType] = useState("MP4");
+    const [mimeType, setMimeType] = useState("");
     const [subtitleLink, setSubtitleLink] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,7 @@ function AddMovieModal({ isActive, onClose, refresh }) {
         setBaseUrl("");
         setTotalChunks("");
         setTotalSize("");
-        setMimeType("MP4");
+        setMimeType("");
         setSubtitleLink("");
     }
 
@@ -127,9 +127,10 @@ function AddMovieModal({ isActive, onClose, refresh }) {
                         <div className="form-group">
                             <label>Mime Type</label>
                             <select value={mimeType} onChange={(e) => setMimeType(e.target.value)}>
-                                <option>MP4</option>
-                                <option>MKV</option>
-                                <option>WEBM</option>
+                                <option value="" disabled>Select Mime Type</option>
+                                <option value="mp4">MP4</option>
+                                <option value="mkv">MKV</option>
+                                <option value="webm">WEBM</option>
                             </select>
                         </div>
 
