@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 // Note: You are using the 'uploadMovie' endpoint here. Make sure this endpoint 
 // supports updating (e.g., PUT request) or create a dedicated editMovie.js function!
-import uploadMovie from '../../pages/movies/addMovie.js';
+import updateMovie from '../../pages/movies/editMovie.js';
 
 function EditMovieModal({ isActive, onClose, movieData, refresh }) {
     const navigate = useNavigate();
@@ -21,34 +21,24 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
 
     // 2. Watch for changes in movieData and update local form states
     useEffect(() => {
-        if (movieData && Object.keys(movieData).length > 0) {
-            setImdbLink(movieData.imdbId ? `https://www.imdb.com/title/${movieData.imdbId}/` : (movieData.imdbLink || ""));
-            // Handles nested posterUrl object (based on your MovieList.jsx) or fallback
-            setPosterLink(movieData.posterUrl?.horizontal || movieData.posterLink || "");
-            setBaseUrl(movieData.baseUrl || "");
-            setTotalChunks(movieData.chunkCount || "");
-            setTotalSize(movieData.size_kb || "");
-            setMimeType(movieData.mimeType ? movieData.mimeType.toLowerCase() : "");
-            setSubtitleLink(movieData.subtitleLink || "");
-        }
-    }, [movieData]);
 
-    const resetForm = () => {
-        setImdbLink("");
-        setPosterLink("");
-        setBaseUrl("");
-        setTotalChunks("");
-        setTotalSize("");
-        setMimeType("");
-        setSubtitleLink("");
-    }
+        setImdbLink(movieData.imdbId ? `https://www.imdb.com/title/${movieData.imdbId}/` : (movieData.imdbLink || ""));
+        // Handles nested posterUrl object (based on your MovieList.jsx) or fallback
+        setPosterLink(movieData.posterUrl?.horizontal || movieData.posterLink || "");
+        setBaseUrl(movieData.baseUrl || "");
+        setTotalChunks(movieData.chunkCount || "");
+        setTotalSize(movieData.size_kb || "");
+        setMimeType(movieData.mimeType ? movieData.mimeType.toLowerCase() : "");
+        setSubtitleLink(movieData.subtitleUrl || "");
+
+    }, [movieData]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         const updatedMovieData = {
-            movieId: movieData._id, // Important: Include ID so backend knows what to update
+            contentId: movieData._id, // Important: Include ID so backend knows what to update
             imdbLink,
             posterLink,
             baseUrl,
@@ -58,12 +48,11 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
             subtitleLink
         };
 
-        const isSuccess = await uploadMovie(updatedMovieData, navigate, toast);
+        const isSuccess = await updateMovie(updatedMovieData, navigate, toast);
         setLoading(false);
 
         if (isSuccess) {
             onClose();
-            resetForm();
             if (refresh) refresh((prev) => prev + 1); // Safely call refresh
         }
     };
@@ -157,7 +146,7 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
                     </div>
 
                     <div className="modal-actions">
-                        <button type="button" className="btn cancel" onClick={() => { onClose(); resetForm(); }}>
+                        <button type="button" className="btn cancel" onClick={() => onClose()}>
                             Cancel
                         </button>
                         <button disabled={loading} className="btn submit" type="submit">
