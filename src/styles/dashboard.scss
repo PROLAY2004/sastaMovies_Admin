@@ -100,6 +100,7 @@
 .upload-item {
     background-color: $bg-dark;
     border-radius: 8px;
+    text-decoration: none;
     overflow: hidden;
     transition: all 0.3s;
 }
@@ -123,6 +124,7 @@
 .upload-title {
     font-family: "Oswald", sans-serif;
     font-size: 1rem;
+    color: $text-color;
     margin-bottom: 0.5rem;
     white-space: nowrap;
     overflow: hidden;

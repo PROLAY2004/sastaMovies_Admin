@@ -12,10 +12,20 @@ export default async function uploadMovie(movieData, navigate, toast) {
 		const result = await response.json();
 
 		if (result.success) {
-			toast.success(result.message);
+			toast.success(result.message, {
+				position: 'top-right',
+				autoClose: 5000,
+				theme: 'dark',
+			});
+
 			return true;
 		} else {
-			toast.error(result.message);
+			toast.error(result.message, {
+				position: 'top-right',
+				autoClose: 5000,
+				theme: 'dark',
+			});
+
 			return false;
 		}
 	} catch (err) {

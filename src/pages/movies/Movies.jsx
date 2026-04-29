@@ -10,7 +10,7 @@ import AddMovieModal from '../../components/modals/AddMovieModal.jsx';
 import EditMovieModal from '../../components/modals/EditMovieModal.jsx';
 import DeleteModal from '../../components/modals/DeleteModal.jsx';
 import MovieList from '../../components/MovieList.jsx';
-import ListLoader from '../../components/ListLoader.jsx';
+import ListLoader from '../../components/loader/ListLoader.jsx';
 import displayMovies from './fetchMovie.js';
 
 function Movies() {
