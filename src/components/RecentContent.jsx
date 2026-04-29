@@ -8,9 +8,10 @@ function RecentContent({ contentData }) {
             <div className="upload-info">
                 <h3 className="upload-title">{contentData.title}</h3>
                 <div className="upload-meta">
+                    <span className="meta-item">{contentData.rating}</span>
                     <span className="meta-item">{contentData.release.slice(-4)}</span>
                     <span className="meta-item">{contentData.runtime}</span>
-                    <span className="meta-item">{contentData.rating}</span>
+
                 </div>
             </div>
         </Link>

@@ -139,3 +139,16 @@
     width: 100%;
     overflow: hidden;
 }
+@media (max-width: 768px) {
+
+    .skeleton-table-header,
+    .skeleton-row {
+        grid-template-columns: 60px 1fr 60px; // ✅ only 3 columns
+    }
+
+    /* Hide extra columns */
+    .skeleton-table-header .skeleton:nth-child(n+4),
+    .skeleton-row .skeleton:nth-child(n+4) {
+        display: none;
+    }
+}

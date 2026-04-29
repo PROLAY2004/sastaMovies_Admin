@@ -6,6 +6,7 @@ import ProtectedRoute from './ProtectedRoute.jsx';
 import Login from '../pages/login/Login.jsx';
 import Default from '../components/Default.jsx';
 import Movies from '../pages/movies/Movies.jsx';
+import Series from '../pages/series/Series.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
 
 const router = createBrowserRouter([
@@ -37,6 +38,15 @@ const router = createBrowserRouter([
 			</ProtectedRoute>
 		),
 	},
+	{
+		path: '/series',
+		element: (
+			<ProtectedRoute>
+				<Series />
+			</ProtectedRoute>
+		),
+	},
+
 	{
 		path: '*',
 		element: <h1>No page found</h1>,
