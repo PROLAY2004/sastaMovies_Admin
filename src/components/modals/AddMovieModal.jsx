@@ -113,7 +113,7 @@ function AddMovieModal({ isActive, onClose, refresh }) {
                         </div>
 
                         <div className="form-group">
-                            <label>Total Size (KB)</label>
+                            <label>Total Size (Byte)</label>
                             <input
                                 type="text"
                                 placeholder="e.g. 2048000"

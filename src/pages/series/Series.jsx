@@ -96,20 +96,20 @@ function Series() {
                                 <th>Genre</th>
                                 <th>Year</th>
                                 <th>Ratings</th>
-                                <th>Runtime</th>
+                                <th>Seasons</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>
-                                    <div className="table-poster" style={{ backgroundImage: `url()` }}></div>
+                                    <div className="table-poster" style={{ backgroundImage: `url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJpzxAtM9Rqy-jmIURm2ER98twBWGs4rYMxg&s)` }}></div>
                                 </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>Squid Game</td>
+                                <td>Action, Crime, Drama</td>
+                                <td>2021–2025</td>
+                                <td>7.9</td>
+                                <td>3</td>
                                 <td className="action-cell">
                                     <button className="action-icon edit" >
                                         <i className="fas fa-edit"></i>

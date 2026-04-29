@@ -26,7 +26,7 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
             setPosterLink(movieData.posterUrl?.horizontal || movieData.posterLink || "");
             setBaseUrl(movieData.baseUrl || "");
             setTotalChunks(movieData.chunkCount || "");
-            setTotalSize(movieData.size_kb || "");
+            setTotalSize(movieData.size_byte || "");
             setMimeType(movieData.mimeType ? movieData.mimeType.toLowerCase() : "");
             setSubtitleLink(movieData.subtitleUrl || "");
         }
@@ -117,7 +117,7 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
                         </div>
 
                         <div className="form-group">
-                            <label>Total Size (KB)</label>
+                            <label>Total Size (Byte)</label>
                             <input
                                 type="text"
                                 placeholder="e.g. 2048000"
