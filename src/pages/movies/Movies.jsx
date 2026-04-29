@@ -128,6 +128,12 @@ function Movies() {
                                 value={selectedGenre}
                                 onChange={(e) => setSelectedGenre(e.target.value)}>
                                 <option value="all">All Genres</option>
+
+                                {/* FIX: Keep selected genre in dropdown even if no movies exist */}
+                                {selectedGenre !== 'all' && !genres.includes(selectedGenre) && (
+                                    <option value={selectedGenre}>{selectedGenre}</option>
+                                )}
+
                                 {genres.map((genre) => (
                                     <option value={genre} key={genre}>
                                         {genre}
@@ -141,6 +147,12 @@ function Movies() {
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}>
                                 <option value="all">All Years</option>
+
+                                {/* FIX: Keep selected year in dropdown even if no movies exist */}
+                                {selectedYear !== 'all' && !years.some(y => String(y) === String(selectedYear)) && (
+                                    <option value={selectedYear}>{selectedYear}</option>
+                                )}
+
                                 {years.map((year) => (
                                     <option value={year} key={year}>
                                         {year}

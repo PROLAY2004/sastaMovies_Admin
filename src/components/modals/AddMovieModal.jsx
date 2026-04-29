@@ -56,7 +56,7 @@ function AddMovieModal({ isActive, onClose, refresh }) {
             <div className="custom-modal add-modal">
                 <div className="modal-header">
                     <h2>Add Movie</h2>
-                    <span className="close-btn" onClick={() => { onClose(); resetForm(); }}>
+                    <span className="close-btn" onClick={() => { if (!loading) { onClose(); resetForm(); } }}>
                         &times;
                     </span>
                 </div>
@@ -141,7 +141,7 @@ function AddMovieModal({ isActive, onClose, refresh }) {
                     </div>
 
                     <div className="modal-actions">
-                        <button type="button" className="btn cancel" onClick={() => { onClose(); resetForm(); }}>
+                        <button type="button" className="btn cancel" onClick={() => { if (!loading) { onClose(); resetForm(); } }}>
                             Cancel
                         </button>
                         <button disabled={loading} className="btn submit" type="submit">

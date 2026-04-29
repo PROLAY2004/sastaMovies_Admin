@@ -26,7 +26,7 @@ function DeleteModal({ isActive, onClose, contentId, refresh }) {
 
                 <div className="modal-header mb-0">
                     <h2>Delete Content</h2>
-                    <span className="close-btn" onClick={onClose}>&times;</span>
+                    <span className="close-btn" onClick={() => { if (!loading) { onClose(); resetForm(); } }}>&times;</span>
                 </div>
 
                 <div className="delete-content">
@@ -39,7 +39,7 @@ function DeleteModal({ isActive, onClose, contentId, refresh }) {
                 </div>
 
                 <div className="modal-actions">
-                    <button type="button" className="btn cancel" onClick={onClose}>Cancel</button>
+                    <button type="button" className="btn cancel" onClick={() => { if (!loading) { onClose(); resetForm(); } }}>Cancel</button>
                     <button disabled={loading} className="btn danger" type="button" onClick={handleDelete}>
                         {loading ? (
                             <>
