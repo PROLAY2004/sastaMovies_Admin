@@ -18,10 +18,10 @@ function EditSeriesModal({ isActive, onClose, seriesData, refresh }) {
             setImdbLink(seriesData.imdbId ? `https://www.imdb.com/title/${seriesData.imdbId}/` : (seriesData.imdbLink || ''));
             setPosterLink(seriesData.posterUrl?.horizontal || seriesData.posterLink || '');
 
-            // Map existing seasons/episodes to state if they exist
-            // (Assumes seriesData.seasons is an array of objects containing the episodes)
-            if (seriesData.seasons && seriesData.seasons.length > 0) {
-                setSeasons(seriesData.seasons);
+            // The backend now provides a perfectly structured seasons array
+            if (seriesData.seasons && Array.isArray(seriesData.seasons)) {
+                // Deep copy the seasons to avoid mutating the original prop data
+                setSeasons(JSON.parse(JSON.stringify(seriesData.seasons)));
             } else {
                 setSeasons([]);
             }
@@ -68,7 +68,7 @@ function EditSeriesModal({ isActive, onClose, seriesData, refresh }) {
         setLoading(true);
 
         const updatedSeriesData = {
-            contentId: seriesData._id, // Critical for backend to know what to update
+            contentId: seriesData._id,
             imdbLink,
             posterLink,
             seasons,
@@ -211,7 +211,7 @@ function EditSeriesModal({ isActive, onClose, seriesData, refresh }) {
                                             <label>Total Chunks</label>
                                             <input
                                                 type="text"
-                                                value={ep.totalChunks || ep.chunkCount || ''}
+                                                value={ep.totalChunks || ''}
                                                 placeholder="e.g. 120"
                                                 onChange={(e) =>
                                                     handleEpisodeChange(
@@ -228,7 +228,7 @@ function EditSeriesModal({ isActive, onClose, seriesData, refresh }) {
                                             <label>Total Size (Byte)</label>
                                             <input
                                                 type="text"
-                                                value={ep.totalSize || ep.size_byte || ''}
+                                                value={ep.totalSize || ''}
                                                 placeholder="e.g. 2048000"
                                                 onChange={(e) =>
                                                     handleEpisodeChange(
@@ -265,7 +265,7 @@ function EditSeriesModal({ isActive, onClose, seriesData, refresh }) {
                                             <input
                                                 type="text"
                                                 placeholder="Subtitle file link"
-                                                value={ep.subtitleLink || ep.subtitleUrl || ''}
+                                                value={ep.subtitleLink || ''}
                                                 onChange={(e) =>
                                                     handleEpisodeChange(
                                                         sIndex,
