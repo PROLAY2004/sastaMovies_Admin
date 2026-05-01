@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import '../../styles/movies.scss';
+import '../../styles/content.scss';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';

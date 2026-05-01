@@ -1,13 +1,13 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function removeMovie(contentId, navigate, toast) {
+export default async function editSeries(seriesData, navigate, toast) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
-			'DELETE',
-			'/user/admin/movie',
-			{ contentId },
+			'PUT', // Assuming you use PUT or POST for updates, adjust if needed
+			'/user/admin/series',
+			seriesData,
 		);
 		const result = await response.json();
 
@@ -17,7 +17,6 @@ export default async function removeMovie(contentId, navigate, toast) {
 				autoClose: 5000,
 				theme: 'dark',
 			});
-
 			return true;
 		} else {
 			toast.error(result.message, {
@@ -25,7 +24,6 @@ export default async function removeMovie(contentId, navigate, toast) {
 				autoClose: 5000,
 				theme: 'dark',
 			});
-
 			return false;
 		}
 	} catch (err) {
@@ -34,7 +32,6 @@ export default async function removeMovie(contentId, navigate, toast) {
 			autoClose: 5000,
 			theme: 'dark',
 		});
-
 		return false;
 	}
 }

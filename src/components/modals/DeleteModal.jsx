@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import removeMovie from "../../pages/movies/deleteMovie.js";
+import removeContent from "../../pages/deleteContent.js";
 
 
 function DeleteModal({ isActive, onClose, contentId, refresh }) {
@@ -11,7 +11,7 @@ function DeleteModal({ isActive, onClose, contentId, refresh }) {
 
     const handleDelete = async () => {
         setLoading(true);
-        const isSuccess = await removeMovie(contentId, navigate, toast);
+        const isSuccess = await removeContent(contentId, navigate, toast);
         setLoading(false);
 
         if (isSuccess) {

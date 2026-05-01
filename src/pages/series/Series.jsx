@@ -2,20 +2,90 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import '../../styles/movies.scss';
+import '../../styles/content.scss';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
 import ListLoader from '../../components/loader/ListLoader.jsx';
+import SeriesList from '../../components/SeriesList.jsx';
 import AddSeriesModal from '../../components/modals/AddSeriesModal.jsx';
+import EditSeriesModal from '../../components/modals/EditSeriesModal.jsx';
+import DeleteModal from '../../components/modals/DeleteModal.jsx';
+import displaySeries from './fetchSeries.js';
 
 function Series() {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [emptyState, setEmptyState] = useState(false);
     const [sidebarActive, setSidebarActive] = useState(false);
+
+    // Modal States
     const [addSeriesModal, setAddSeriesModal] = useState(false);
+    const [editModalActive, setEditModalActive] = useState(false);
+    const [deleteModalActive, setDeleteModalActive] = useState(false);
+
+    // Data states
+    const [series, setSeries] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [years, setYears] = useState([]);
+    const [seriesDetails, setSeriesDetails] = useState({});
+    const [deleteId, setDeleteId] = useState('');
+
+    // Filter and Pagination states
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [selectedGenre, setSelectedGenre] = useState('all');
+    const [selectedYear, setSelectedYear] = useState('all');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    // UI states
+    const [emptyState, setEmptyState] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [pageReload, setPageReload] = useState(0);
+
+    // 1. Debounce Search Implementation
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+        }, 400);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    // 2. Reset back to Page 1 if any filter logic is changed
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [debouncedSearch, selectedGenre, selectedYear]);
+
+    // 3. Fetching series triggering on state change
+    const fetchAllSeries = async () => {
+        const payload = {
+            search: debouncedSearch,
+            genre: selectedGenre,
+            year: selectedYear,
+            page: currentPage,
+            limit: 5,
+        };
+
+        const seriesData = await displaySeries(
+            navigate,
+            toast,
+            payload,
+            setSeries,
+            setGenres,
+            setYears,
+            setLoading,
+            setTotalPages,
+        );
+
+        if (seriesData && seriesData.series.length === 0) {
+            setEmptyState(true);
+        } else {
+            setEmptyState(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchAllSeries();
+    }, [debouncedSearch, selectedGenre, selectedYear, currentPage, pageReload]);
 
     return (
         <div className="admin-container">
@@ -48,16 +118,19 @@ function Series() {
                         <input
                             type="text"
                             placeholder="Search series..."
-
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
                     <div className="filter-group d-flex gap-2">
                         <div className="filter-dropdown w-100">
                             <select
-                                className="genre-filter w-100 h-100">
+                                className="genre-filter w-100 h-100"
+                                value={selectedGenre}
+                                onChange={(e) => setSelectedGenre(e.target.value)}>
                                 <option value="all">All Genres</option>
 
-                                {/* {selectedGenre !== 'all' && !genres.includes(selectedGenre) && (
+                                {selectedGenre !== 'all' && !genres.includes(selectedGenre) && (
                                     <option value={selectedGenre}>{selectedGenre}</option>
                                 )}
 
@@ -65,14 +138,16 @@ function Series() {
                                     <option value={genre} key={genre}>
                                         {genre}
                                     </option>
-                                ))} */}
+                                ))}
                             </select>
                         </div>
                         <div className="filter-dropdown w-100">
                             <select
-                                className="year-filter w-100 h-100">
+                                className="year-filter w-100 h-100"
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(e.target.value)}>
                                 <option value="all">All Years</option>
-                                {/* 
+
                                 {selectedYear !== 'all' && !years.some(y => String(y) === String(selectedYear)) && (
                                     <option value={selectedYear}>{selectedYear}</option>
                                 )}
@@ -81,7 +156,7 @@ function Series() {
                                     <option value={year} key={year}>
                                         {year}
                                     </option>
-                                ))} */}
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -105,24 +180,16 @@ function Series() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div className="table-poster" style={{ backgroundImage: `url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJpzxAtM9Rqy-jmIURm2ER98twBWGs4rYMxg&s)` }}></div>
-                                </td>
-                                <td>Squid Game</td>
-                                <td>Action, Crime, Drama</td>
-                                <td>2021–2025</td>
-                                <td>7.9</td>
-                                <td>3</td>
-                                <td className="action-cell">
-                                    <button className="action-icon edit" >
-                                        <i className="fas fa-edit"></i>
-                                    </button>
-                                    <button className="action-icon delete" >
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            {series.map((item) => (
+                                <SeriesList
+                                    key={item._id}
+                                    seriesData={item}
+                                    onEdit={setEditModalActive}
+                                    onDelete={setDeleteModalActive}
+                                    setSeriesDetails={setSeriesDetails}
+                                    setDelete={setDeleteId}
+                                />
+                            ))}
                         </tbody>
                     </table>
 
@@ -134,13 +201,13 @@ function Series() {
                         </div>
                         <h3 className="empty-state-title">No Series Found</h3>
                         <p className="empty-state-message">
-                            We couldn't find any movies matching your search criteria.
+                            We couldn't find any series matching your search criteria.
                         </p>
                     </div>
                 </div>
 
                 {/* Pagination Rendering */}
-                {/* {!emptyState && !loading && (
+                {!emptyState && !loading && (
                     <div className="pagination">
                         <button
                             className={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
@@ -170,10 +237,27 @@ function Series() {
                             <i className="fas fa-angle-right"></i>
                         </button>
                     </div>
-                )} */}
+                )}
 
-                <AddSeriesModal isActive={addSeriesModal} onClose={() => setAddSeriesModal(false)} refresh={setPageReload} />
-
+                <AddSeriesModal
+                    isActive={addSeriesModal}
+                    onClose={() => setAddSeriesModal(false)}
+                    refresh={setPageReload}
+                />
+                <EditSeriesModal
+                    isActive={editModalActive}
+                    onClose={() => setEditModalActive(false)}
+                    seriesData={seriesDetails}
+                    refresh={setPageReload}
+                />
+                <DeleteModal
+                    isActive={deleteModalActive}
+                    onClose={() => setDeleteModalActive(false)}
+                    contentId={deleteId}
+                    refresh={setPageReload}
+                // Optional: If you need to map this strictly to a series delete route, 
+                // ensure your generic DeleteModal supports dynamic route passing or creates a generic delete content endpoint.
+                />
             </main>
         </div>
     );

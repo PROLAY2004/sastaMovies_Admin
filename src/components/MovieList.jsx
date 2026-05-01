@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function MovieList({ movieData, onEdit, onDelete, setMovie, setDelete }) {
     return (
         <tr>
