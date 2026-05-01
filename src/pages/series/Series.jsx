@@ -14,6 +14,8 @@ function Series() {
     const [loading, setLoading] = useState(false);
     const [emptyState, setEmptyState] = useState(false);
     const [sidebarActive, setSidebarActive] = useState(false);
+    const [addSeriesModal, setAddSeriesModal] = useState(false);
+    const [pageReload, setPageReload] = useState(0);
 
     return (
         <div className="admin-container">
@@ -30,6 +32,7 @@ function Series() {
                         <h1 className="list-title">Series Library</h1>
                         <div className="list-actions">
                             <button
+                                onClick={() => setAddSeriesModal(true)}
                                 className="action-btn primary">
                                 <i className="fas fa-plus"></i>
                                 Add Series
@@ -127,7 +130,7 @@ function Series() {
                         className="empty-state mt-4"
                         style={{ display: emptyState ? 'flex' : 'none' }}>
                         <div className="empty-state-icon">
-                            <i className="fas fa-film"></i>
+                            <i className="fas fa-tv"></i>
                         </div>
                         <h3 className="empty-state-title">No Series Found</h3>
                         <p className="empty-state-message">
@@ -169,7 +172,7 @@ function Series() {
                     </div>
                 )} */}
 
-                <AddSeriesModal />
+                <AddSeriesModal isActive={addSeriesModal} onClose={() => setAddSeriesModal(false)} refresh={setPageReload} />
 
             </main>
         </div>

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-function AddSeriesModal({ isActive = true, onClose, refresh }) {
+import uploadSeries from '../../pages/series/addSeries';
+
+function AddSeriesModal({ isActive, onClose, refresh }) {
     const navigate = useNavigate();
 
     const [imdbLink, setImdbLink] = useState('');
@@ -34,6 +36,7 @@ function AddSeriesModal({ isActive = true, onClose, refresh }) {
             mimeType: '',
             subtitleLink: '',
         });
+
         setSeasons(updated);
     };
 
@@ -54,17 +57,15 @@ function AddSeriesModal({ isActive = true, onClose, refresh }) {
             seasons,
         };
 
-        console.log(seriesData);
-
-        // const isSuccess = await uploadSeries(seriesData, navigate, toast);
+        const isSuccess = await uploadSeries(seriesData, navigate, toast);
 
         setLoading(false);
 
-        // if (isSuccess) {
+        if (isSuccess) {
         onClose();
         resetForm();
         refresh((prev) => prev + 1);
-        // }
+        }
     };
 
     return (
@@ -89,7 +90,7 @@ function AddSeriesModal({ isActive = true, onClose, refresh }) {
                     <div className="form-group">
                         <label>IMDB Link</label>
                         <input
-                            type="url"
+                            type="text"
                             placeholder="https://www.imdb.com/title/..."
                             value={imdbLink}
                             onChange={(e) => setImdbLink(e.target.value)}
@@ -100,7 +101,7 @@ function AddSeriesModal({ isActive = true, onClose, refresh }) {
                     <div className="form-group">
                         <label>Poster (16:9)</label>
                         <input
-                            type="url"
+                            type="text"
                             value={posterLink}
                             placeholder="Poster image link"
                             onChange={(e) => setPosterLink(e.target.value)}
@@ -246,7 +247,7 @@ function AddSeriesModal({ isActive = true, onClose, refresh }) {
                                         <div className="form-group">
                                             <label>Subtitle (Optional)</label>
                                             <input
-                                                type="url"
+                                                type="text"
                                                 placeholder="Subtitle file link"
                                                 value={ep.subtitleLink}
                                                 onChange={(e) =>
@@ -280,7 +281,17 @@ function AddSeriesModal({ isActive = true, onClose, refresh }) {
                         </button>
 
                         <button disabled={loading} className="btn submit" type="submit">
-                            {loading ? 'Adding...' : 'Add Series'}
+                            {loading ? (
+                                <>
+                                    <div
+                                        className="spinner-border text-dark"
+                                        role="status"
+                                        style={{ width: '20px', height: '20px' }}></div>{' '}
+                                    Adding Series...
+                                </>
+                            ) : (
+                                'Add Series'
+                            )}
                         </button>
                     </div>
                 </form>

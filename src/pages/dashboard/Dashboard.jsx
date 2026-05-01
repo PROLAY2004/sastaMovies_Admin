@@ -57,14 +57,14 @@ function Dashboard() {
                         </div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">0</div>
+                        <div className="stat-value">{seriesCount}</div>
                         <div className="stat-label">Total Series</div>
                         <div className="stat-icon">
                             <i className="fas fa-tv"></i>
                         </div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">0</div>
+                        <div className="stat-value">{userCount}</div>
                         <div className="stat-label">Active Users</div>
                         <div className="stat-icon">
                             <i className="fas fa-users"></i>

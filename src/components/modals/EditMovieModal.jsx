@@ -71,7 +71,7 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
                     <div className="form-group">
                         <label>IMDB Link</label>
                         <input
-                            type="url"
+                            type="text"
                             placeholder="https://www.imdb.com/title/..."
                             value={imdbLink}
                             onChange={(e) => setImdbLink(e.target.value)}
@@ -81,7 +81,7 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
                     <div className="form-group">
                         <label>Poster (16:9)</label>
                         <input
-                            type="url"
+                            type="text"
                             placeholder="Poster image link"
                             value={posterLink}
                             onChange={(e) => setPosterLink(e.target.value)} />
@@ -99,7 +99,7 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
                     <div className="form-group">
                         <label>Base URL</label>
                         <input
-                            type="url"
+                            type="text"
                             placeholder="Enter base URL for chunks"
                             value={baseUrl}
                             onChange={(e) => setBaseUrl(e.target.value)}
@@ -141,7 +141,7 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
 
                         <div className="form-group">
                             <label>Subtitle (Optional)</label>
-                            <input type="url" placeholder="Subtitle file link" value={subtitleLink} onChange={(e) => setSubtitleLink(e.target.value)} />
+                            <input type="text" placeholder="Subtitle file link" value={subtitleLink} onChange={(e) => setSubtitleLink(e.target.value)} />
                         </div>
                     </div>
 
