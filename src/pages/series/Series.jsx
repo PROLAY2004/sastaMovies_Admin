@@ -7,6 +7,7 @@ import '../../styles/movies.scss';
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
 import ListLoader from '../../components/loader/ListLoader.jsx';
+import AddSeriesModal from '../../components/modals/AddSeriesModal.jsx';
 
 function Series() {
     const navigate = useNavigate();
@@ -167,6 +168,8 @@ function Series() {
                         </button>
                     </div>
                 )} */}
+
+                <AddSeriesModal />
 
             </main>
         </div>

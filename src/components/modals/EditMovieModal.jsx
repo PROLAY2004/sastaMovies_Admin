@@ -48,12 +48,13 @@ function EditMovieModal({ isActive, onClose, movieData, refresh }) {
         };
 
         const isSuccess = await updateMovie(updatedMovieData, navigate, toast);
-        setLoading(false);
 
         if (isSuccess) {
             onClose();
             if (refresh) refresh((prev) => prev + 1); // Safely call refresh
         }
+
+        setLoading(false);
     };
 
     return (

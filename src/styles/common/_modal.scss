@@ -144,3 +144,66 @@ select:focus {
     font-size: 13px;
     color: #ff4d4d;
 }
+
+.season-block {
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 12px;
+    background: #0f0f0f;
+}
+
+.season-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    h3 {
+        font-size: 14px;
+        color: $secondary-color;
+    }
+}
+
+/* Episode */
+.episode-block {
+    border: 1px dashed #2a2a2a;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.episode-header {
+    margin-bottom: 10px;
+
+    span {
+        font-size: 13px;
+        color: $text-muted;
+    }
+}
+
+.season-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Episode buttons inline */
+.episode-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* Danger outline button (clean minimal look) */
+.danger-outline {
+    border: 1px solid $danger-color;
+    background: transparent;
+    color: $danger-color;
+}
+
+.danger-outline:hover {
+    background: $danger-color;
+    color: #fff;
+}
+@media(max-width:400px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
