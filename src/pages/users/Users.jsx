@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import '../../styles/users.scss'; // New SCSS file imported
+import '../../styles/users.scss';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
 import ListLoader from '../../components/loader/ListLoader.jsx';
-
-// Placeholders for modals you might build later
+import UserList from '../../components/UserList.jsx';
+import displayUsers from './fetchUsers.js';
 import InviteUserModal from '../../components/modals/InviteUserModal.jsx';
-// import RenewModal from '../../components/modals/RenewModal.jsx';
 
 function Users() {
     const navigate = useNavigate();
@@ -27,15 +26,15 @@ function Users() {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
 
-    // Filter and Pagination States
+    // Filter, Sort, and Pagination States
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('all');
-    const [selectedRole, setSelectedRole] = useState('all'); // The secondary chosen dropdown
+    const [sortOption, setSortOption] = useState('newest'); // Replaced role with sort
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // 1. Debounce Search
+    // 1. Debounce Search Implementation
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchQuery);
@@ -43,64 +42,44 @@ function Users() {
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    // 2. Reset Page on Filter Change
+    // 2. Reset back to Page 1 if any filter or sort logic is changed
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearch, selectedStatus, selectedRole]);
+    }, [debouncedSearch, selectedStatus, sortOption]);
 
-    // 3. Mock Fetching Data (Replace with your API call)
+    // 3. Fetching users on state change
     const fetchUsers = async () => {
-        setLoading(true);
-
-        // Mock API Payload
         const payload = {
             search: debouncedSearch,
             status: selectedStatus,
-            role: selectedRole,
+            sort: sortOption,
             page: currentPage,
-            limit: 10,
+            limit: 5,
         };
 
-        // TODO: Replace with actual fetch call
-        // const response = await displayUsers(payload);
+        const userData = await displayUsers(
+            navigate,
+            toast,
+            payload,
+            setUsers,
+            setLoading,
+            setTotalPages
+        );
 
-        // Mocking a delay & response for demonstration
-        setTimeout(() => {
-            const mockUsers = [
-                { _id: '1', name: 'John Doe', email: 'john@example.com', status: 'active', role: 'User', created: '2025-01-15T10:30:00Z', lastLogin: '2026-05-01T14:20:00Z', validTill: '2027-01-15T10:30:00Z', isBlocked: false },
-                { _id: '2', name: 'Jane Smith', email: 'jane@example.com', status: 'expired', role: 'User', created: '2024-02-10T09:15:00Z', lastLogin: '2025-02-09T18:45:00Z', validTill: '2025-02-10T09:15:00Z', isBlocked: false },
-                { _id: '3', name: 'Admin Master', email: 'admin@sastamovies.com', status: 'active', role: 'Admin', created: '2023-11-05T08:00:00Z', lastLogin: '2026-05-02T09:00:00Z', validTill: '2099-12-31T23:59:00Z', isBlocked: false },
-                { _id: '4', name: 'Spam Account', email: 'spammy@fake.com', status: 'blocked', role: 'User', created: '2026-04-20T11:11:00Z', lastLogin: '2026-04-21T12:00:00Z', validTill: '2027-04-20T11:11:00Z', isBlocked: true },
-            ];
-
-            // Apply basic mock filtering for empty state demo
-            let filtered = mockUsers;
-            if (payload.status !== 'all') filtered = filtered.filter(u => u.status === payload.status);
-            if (payload.role !== 'all') filtered = filtered.filter(u => u.role.toLowerCase() === payload.role);
-            if (payload.search) filtered = filtered.filter(u => u.name.toLowerCase().includes(payload.search.toLowerCase()) || u.email.toLowerCase().includes(payload.search.toLowerCase()));
-
-            setUsers(filtered);
-            setTotalPages(1); // Set actual total pages from API
-            setEmptyState(filtered.length === 0);
-            setLoading(false);
-        }, 800);
+        if (userData && userData.users.length === 0) {
+            setEmptyState(true);
+        } else {
+            setEmptyState(false);
+        }
     };
 
     useEffect(() => {
         fetchUsers();
-    }, [debouncedSearch, selectedStatus, selectedRole, currentPage, pageReload]);
+    }, [debouncedSearch, selectedStatus, sortOption, currentPage, pageReload]);
 
-    // Format Date Helper
-    const formatDate = (isoString) => {
-        const date = new Date(isoString);
-        return date.toLocaleDateString('en-GB') + ' ' + date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    };
-
-    // Action Handlers
     const handleToggleBlock = (user) => {
-        // Add API call here
-        toast.info(user.isBlocked ? `Unblocked ${user.name}` : `Blocked ${user.name}`);
-        setPageReload(prev => prev + 1);
+        // Implement actual block/unblock API logic here
+        toast.info(`${user.isBlocked ? 'Unblocking' : 'Blocking'} ${user.name}...`, { theme: 'dark' });
     };
 
     return (
@@ -127,7 +106,7 @@ function Users() {
                     </div>
                 </header>
 
-                {/* Filters */}
+                {/* Filters & Sorting */}
                 <div className="search-filter d-flex gap-2 flex-sm-row">
                     <div className="search-box w-100">
                         <i className="fas fa-search"></i>
@@ -152,12 +131,15 @@ function Users() {
                         </div>
                         <div className="filter-dropdown w-100">
                             <select
-                                className="role-filter w-100 h-100"
-                                value={selectedRole}
-                                onChange={(e) => setSelectedRole(e.target.value)}>
-                                <option value="all">All Roles</option>
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
+                                className="sort-filter w-100 h-100"
+                                value={sortOption}
+                                onChange={(e) => setSortOption(e.target.value)}>
+                                <option value="newest">Newest First</option>
+                                <option value="name_asc">Name (A to Z)</option>
+                                <option value="name_desc">Name (Z to A)</option>
+                                <option value="login_recent">Recently Logged In</option>
+                                <option value="expiry_soon">Expiring Soon</option>
+                                <option value="expiry_latest">Longest Expiry</option>
                             </select>
                         </div>
                     </div>
@@ -171,8 +153,7 @@ function Users() {
                     <table className="user-table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
+                                <th>User Details</th>
                                 <th>Created At</th>
                                 <th>Last Login</th>
                                 <th>Valid Till</th>
@@ -182,34 +163,16 @@ function Users() {
                         </thead>
                         <tbody>
                             {users.map((user) => (
-                                <tr key={user._id}>
-                                    <td className="font-weight-bold">{user.name}</td>
-                                    <td className="text-info">{user.email}</td>
-                                    <td>{formatDate(user.created)}</td>
-                                    <td>{formatDate(user.lastLogin)}</td>
-                                    <td>{formatDate(user.validTill)}</td>
-                                    <td>
-                                        <span className={`status-badge ${user.status}`}>
-                                            {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-                                        </span>
-                                    </td>
-                                    <td className="action-cell">
-                                        <button
-                                            className={`action-icon ${user.isBlocked ? 'unblock' : 'block'}`}
-                                            onClick={() => handleToggleBlock(user)}
-                                            title={user.isBlocked ? "Unblock User" : "Block User"}
-                                        >
-                                            <i className={`fas ${user.isBlocked ? 'fa-unlock' : 'fa-ban'}`}></i>
-                                        </button>
-                                        <button
-                                            className="action-icon renew"
-                                            onClick={() => { setSelectedUser(user); setRenewModalActive(true); }}
-                                            title="Extend/Renew Subscription"
-                                        >
-                                            <i className="fas fa-calendar-plus"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <UserList
+                                    key={user._id}
+                                    user={user}
+                                    handleToggleBlock={handleToggleBlock}
+                                    setSelectedUser={setSelectedUser}
+                                    setRenewModalActive={setRenewModalActive}
+                                    onDelete={(id) => {
+                                        // setDeleteId(id); setDeleteModalActive(true);
+                                    }}
+                                />
                             ))}
                         </tbody>
                     </table>
@@ -233,7 +196,8 @@ function Users() {
                         <button
                             className={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
                             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                            disabled={currentPage === 1}>
+                            disabled={currentPage === 1}
+                            style={{ background: 'transparent', border: 'none' }}>
                             <i className="fas fa-angle-left"></i>
                         </button>
 
@@ -241,7 +205,8 @@ function Users() {
                             <button
                                 key={i + 1}
                                 className={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
-                                onClick={() => setCurrentPage(i + 1)}>
+                                onClick={() => setCurrentPage(i + 1)}
+                                style={{ background: 'transparent', border: 'none' }}>
                                 {i + 1}
                             </button>
                         ))}
@@ -249,13 +214,13 @@ function Users() {
                         <button
                             className={`page-link ${currentPage === totalPages ? 'disabled' : ''}`}
                             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                            disabled={currentPage === totalPages}>
+                            disabled={currentPage === totalPages}
+                            style={{ background: 'transparent', border: 'none' }}>
                             <i className="fas fa-angle-right"></i>
                         </button>
                     </div>
                 )}
 
-                {/* Modals placeholders */}
                 <InviteUserModal isActive={inviteModalActive} onClose={() => setInviteModalActive(false)} refresh={setPageReload} />
                 {/* <RenewModal isActive={renewModalActive} onClose={() => setRenewModalActive(false)} user={selectedUser} refresh={setPageReload} /> */}
 

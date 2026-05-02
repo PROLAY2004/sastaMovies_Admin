@@ -27,16 +27,16 @@
         border-bottom: 1px solid #333333;
         vertical-align: middle;
         font-size: 0.95rem;
-
-        &.text-muted {
-            color: $text-muted;
-        }
-
-        &.font-weight-bold {
-            font-weight: 600;
-            color: white;
-        }
     }
+}
+
+td .text-muted {
+    color: $text-muted !important;
+}
+
+.font-weight-bold {
+    font-weight: 600;
+    color: white;
 }
 
 /* User Status Badges */
