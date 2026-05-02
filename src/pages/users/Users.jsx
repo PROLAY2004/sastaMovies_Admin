@@ -77,10 +77,7 @@ function Users() {
         fetchUsers();
     }, [debouncedSearch, selectedStatus, sortOption, currentPage, pageReload]);
 
-    const handleToggleBlock = (user) => {
-        // Implement actual block/unblock API logic here
-        toast.info(`${user.isBlocked ? 'Unblocking' : 'Blocking'} ${user.name}...`, { theme: 'dark' });
-    };
+
 
     return (
         <div className="admin-container">
@@ -166,7 +163,7 @@ function Users() {
                                 <UserList
                                     key={user._id}
                                     user={user}
-                                    handleToggleBlock={handleToggleBlock}
+                                    refresh={setPageReload}
                                     setSelectedUser={setSelectedUser}
                                     setRenewModalActive={setRenewModalActive}
                                     onDelete={(id) => {
