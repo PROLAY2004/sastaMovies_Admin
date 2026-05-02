@@ -5,7 +5,7 @@ import { useState } from 'react';
 import updateStatus from '../pages/users/changeStatus.js';
 import formatDate from '../utils/dateFormater.js';
 
-function UserList({ user, refresh, setDeleteModalActive, setUserId, setRenewModalActive }) {
+function UserList({ user, refresh, setDeleteModalActive, setUserId, setRenewModalActive, setUserData }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const currentStatus = user.isBlocked ? 'blocked' : (new Date(user.validTill) < new Date() ? 'expired' : 'active');
@@ -51,7 +51,7 @@ function UserList({ user, refresh, setDeleteModalActive, setUserId, setRenewModa
 
                 <button
                     className="action-icon renew"
-                    onClick={() => { setSelectedUser(user); setRenewModalActive(true); }}
+                    onClick={() => { setUserData(user); setRenewModalActive(true); }}
                     title="Extend/Renew Subscription"
                 >
                     <i className="fas fa-calendar-plus"></i>

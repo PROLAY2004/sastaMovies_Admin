@@ -1,42 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import inviteUser from '../../pages/users/addUser.js'
+import renewUser from '../../pages/users/extendUser.js'
 
 
-function InviteUserModal({ isActive, onClose, refresh }) {
+function RenewUserModal({ isActive, onClose, refresh, user }) {
     const navigate = useNavigate()
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const getNextDay = (d) => {
+        const date = new Date(d);
+        date.setDate(date.getDate() + 1);
+        return date.toLocaleDateString("en-CA");
+    };
 
-    const minDate = tomorrow.toLocaleDateString("en-CA");
     const [loading, setLoading] = useState(false);
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('');
-    const [date, setDate] = useState(minDate);
+    const [date, setDate] = useState(
+        new Date().toLocaleDateString("en-CA")
+    );
+
     const resetForm = () => {
-        setName("");
-        setEmail("");
-        setDate(minDate);
+        setDate(getNextDay(user.validTill));
     }
+
+    useEffect(() => {
+        if (user?.validTill) {
+            setDate(getNextDay(user.validTill)); // ✅ next day
+        }
+    }, [user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
-        const userData = {
-            name,
-            email,
-            date
-        };
-
-        const isSuccess = await inviteUser(userData, navigate, toast);
+        const isSuccess = await renewUser({ userId: user._id, date }, navigate, toast);
         setLoading(false);
 
         if (isSuccess) {
             onClose();
-            resetForm();
             refresh((prev) => prev + 1);
         }
     };
@@ -46,28 +46,21 @@ function InviteUserModal({ isActive, onClose, refresh }) {
             <div className="custom-modal add-modal invite-modal">
 
                 <div className="modal-header">
-                    <h2>Invite User</h2>
+                    <h2>Renew User</h2>
                     <span className="close-btn" onClick={() => { if (!loading) { onClose(); resetForm(); } }} >&times;</span>
                 </div>
 
                 <form className="modal-form" onSubmit={handleSubmit}>
-
                     <div className="form-group">
-                        <label>Name</label>
-                        <input type="text" placeholder="Enter full name" value={name} onChange={(e) => setName(e.target.value)} />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input type="email" placeholder="Enter email address" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Valid Till</label>
+                        <label>Extend Till</label>
                         <input
                             type="date"
                             className="date-input w-100"
-                            min={minDate}
+                            min={
+                                user?.validTill
+                                    ? getNextDay(user.validTill)
+                                    : new Date().toLocaleDateString("en-CA")
+                            }
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
                             style={{ colorScheme: "dark" }}
@@ -83,10 +76,10 @@ function InviteUserModal({ isActive, onClose, refresh }) {
                                         className="spinner-border text-dark"
                                         role="status"
                                         style={{ width: '20px', height: '20px' }}></div>{' '}
-                                    Sending Invite...
+                                    Renewing...
                                 </>
                             ) : (
-                                'Sent Invite'
+                                'Renew User'
                             )}
                         </button>
                     </div>
@@ -97,4 +90,4 @@ function InviteUserModal({ isActive, onClose, refresh }) {
     );
 }
 
-export default InviteUserModal;
+export default RenewUserModal;

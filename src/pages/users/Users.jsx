@@ -10,6 +10,7 @@ import ListLoader from '../../components/loader/ListLoader.jsx';
 import UserList from '../../components/UserList.jsx';
 import displayUsers from './fetchUsers.js';
 import InviteUserModal from '../../components/modals/InviteUserModal.jsx';
+import RenewUserModal from '../../components/modals/RenewUserModal.jsx';
 import DeleteUserModal from '../../components/modals/DeleteUserModal.jsx';
 
 function Users() {
@@ -27,6 +28,7 @@ function Users() {
     // Data States
     const [users, setUsers] = useState([]);
     const [userId, setUserId] = useState('');
+    const [userData, setUserData] = useState({});
     const [selectedUser, setSelectedUser] = useState(null);
 
     // Filter, Sort, and Pagination States
@@ -94,7 +96,7 @@ function Users() {
                     />
 
                     <div className="list-header">
-                        <h1 className="list-title">User Management</h1>
+                        <h1 className="list-title">Manage Users</h1>
                         <div className="list-actions">
                             <button
                                 className="action-btn primary"
@@ -154,9 +156,9 @@ function Users() {
                         <thead>
                             <tr>
                                 <th>User Details</th>
-                                <th>Created At</th>
-                                <th>Last Login</th>
-                                <th>Valid Till</th>
+                                <th>Created_At</th>
+                                <th>Last_Login</th>
+                                <th>Valid_Till</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -170,6 +172,7 @@ function Users() {
                                     setDeleteModalActive={setDeleteModalActive}
                                     setRenewModalActive={setRenewModalActive}
                                     setUserId={setUserId}
+                                    setUserData={setUserData}
                                 />
                             ))}
                         </tbody>
@@ -220,7 +223,7 @@ function Users() {
                 )}
 
                 <InviteUserModal isActive={inviteModalActive} onClose={() => setInviteModalActive(false)} refresh={setPageReload} />
-                {/* <RenewModal isActive={renewModalActive} onClose={() => setRenewModalActive(false)} user={selectedUser} refresh={setPageReload} /> */}
+                <RenewUserModal isActive={renewModalActive} onClose={() => setRenewModalActive(false)} user={userData} refresh={setPageReload} />
                 <DeleteUserModal isActive={deleteModalActive} onClose={() => setDeleteModalActive(false)} userId={userId} refresh={setPageReload} />
             </main>
         </div>
