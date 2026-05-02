@@ -10,6 +10,7 @@ import ListLoader from '../../components/loader/ListLoader.jsx';
 import UserList from '../../components/UserList.jsx';
 import displayUsers from './fetchUsers.js';
 import InviteUserModal from '../../components/modals/InviteUserModal.jsx';
+import DeleteUserModal from '../../components/modals/DeleteUserModal.jsx';
 
 function Users() {
     const navigate = useNavigate();
@@ -18,12 +19,14 @@ function Users() {
     const [sidebarActive, setSidebarActive] = useState(false);
     const [inviteModalActive, setInviteModalActive] = useState(false);
     const [renewModalActive, setRenewModalActive] = useState(false);
+    const [deleteModalActive, setDeleteModalActive] = useState(false);
     const [loading, setLoading] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
     const [pageReload, setPageReload] = useState(0);
 
     // Data States
     const [users, setUsers] = useState([]);
+    const [userId, setUserId] = useState('');
     const [selectedUser, setSelectedUser] = useState(null);
 
     // Filter, Sort, and Pagination States
@@ -164,11 +167,9 @@ function Users() {
                                     key={user._id}
                                     user={user}
                                     refresh={setPageReload}
-                                    setSelectedUser={setSelectedUser}
+                                    setDeleteModalActive={setDeleteModalActive}
                                     setRenewModalActive={setRenewModalActive}
-                                    onDelete={(id) => {
-                                        // setDeleteId(id); setDeleteModalActive(true);
-                                    }}
+                                    setUserId={setUserId}
                                 />
                             ))}
                         </tbody>
@@ -220,7 +221,7 @@ function Users() {
 
                 <InviteUserModal isActive={inviteModalActive} onClose={() => setInviteModalActive(false)} refresh={setPageReload} />
                 {/* <RenewModal isActive={renewModalActive} onClose={() => setRenewModalActive(false)} user={selectedUser} refresh={setPageReload} /> */}
-
+                <DeleteUserModal isActive={deleteModalActive} onClose={() => setDeleteModalActive(false)} userId={userId} refresh={setPageReload} />
             </main>
         </div>
     );

@@ -1,11 +1,11 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function updateStatus(userId, navigate, toast) {
+export default async function removeUser(userId, navigate, toast) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
-			'PATCH',
+			'DELETE',
 			'/user/admin/users',
 			{ userId },
 		);

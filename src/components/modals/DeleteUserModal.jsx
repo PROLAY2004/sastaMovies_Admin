@@ -2,16 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import removeContent from "../../pages/deleteContent.js";
+import removeUser from "../../pages/users/deleteUser.js";
 
 
-function DeleteUserModal({ isActive, onClose, contentId, refresh }) {
+function DeleteUserModal({ isActive, onClose, userId, refresh }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const handleDelete = async () => {
         setLoading(true);
-        const isSuccess = await removeContent(contentId, navigate, toast);
+        const isSuccess = await removeUser(userId, navigate, toast);
         setLoading(false);
 
         if (isSuccess) {
@@ -25,13 +25,13 @@ function DeleteUserModal({ isActive, onClose, contentId, refresh }) {
             <div className="custom-modal delete-modal">
 
                 <div className="modal-header mb-0">
-                    <h2>Delete Content</h2>
+                    <h2>Delete User</h2>
                     <span className="close-btn" onClick={() => { if (!loading) { onClose(); resetForm(); } }}>&times;</span>
                 </div>
 
                 <div className="delete-content">
                     <p className="delete-text fw-lighter mb-0">
-                        Are you sure you want to delete this content?
+                        Are you sure you want to delete this user?
                     </p>
                     <p className="delete-warning">
                         This action cannot be undone.

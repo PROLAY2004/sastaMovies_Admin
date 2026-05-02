@@ -5,7 +5,7 @@ import { useState } from 'react';
 import updateStatus from '../pages/users/changeStatus.js';
 import formatDate from '../utils/dateFormater.js';
 
-function UserList({ user, refresh, setSelectedUser, setRenewModalActive, onDelete }) {
+function UserList({ user, refresh, setDeleteModalActive, setUserId, setRenewModalActive }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const currentStatus = user.isBlocked ? 'blocked' : (new Date(user.validTill) < new Date() ? 'expired' : 'active');
@@ -57,7 +57,7 @@ function UserList({ user, refresh, setSelectedUser, setRenewModalActive, onDelet
                     <i className="fas fa-calendar-plus"></i>
                 </button>
 
-                <button className="action-icon delete" onClick={() => onDelete(user._id)}>
+                <button className="action-icon delete" onClick={() => { setDeleteModalActive(true); setUserId(user._id) }}>
                     <i className="fas fa-trash"></i>
                 </button>
             </td>
