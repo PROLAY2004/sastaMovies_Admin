@@ -7,6 +7,7 @@ import Login from '../pages/login/Login.jsx';
 import Default from '../components/Default.jsx';
 import Movies from '../pages/movies/Movies.jsx';
 import Series from '../pages/series/Series.jsx';
+import Users from '../pages/users/Users.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
 
 const router = createBrowserRouter([
@@ -46,7 +47,14 @@ const router = createBrowserRouter([
 			</ProtectedRoute>
 		),
 	},
-
+	{
+		path: '/users',
+		element: (
+			<ProtectedRoute>
+				<Users />
+			</ProtectedRoute>
+		),
+	},
 	{
 		path: '*',
 		element: <h1>No page found</h1>,
