@@ -10,6 +10,7 @@ import Hambargar from '../../components/Hambargar.jsx';
 import ListLoader from '../../components/loader/ListLoader.jsx';
 import ActivityList from '../../components/ActivityList.jsx';
 import fetchActivityLogs from './fetchActivity.js';
+import exportActivityLogs from './exportActivity.js';
 
 function Activity() {
     const navigate = useNavigate();
@@ -30,6 +31,7 @@ function Activity() {
     // UI states
     const [emptyState, setEmptyState] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isExporting, setIsExporting] = useState(false); // Export loading state
 
     // 1. Debounce Search
     useEffect(() => {
@@ -64,7 +66,6 @@ function Activity() {
             setTotalPages
         );
 
-        // Check if activities exist to trigger empty state
         if (logData && logData.activities && logData.activities.length === 0) {
             setEmptyState(true);
         } else {
@@ -75,6 +76,23 @@ function Activity() {
     useEffect(() => {
         loadLogs();
     }, [debouncedSearch, selectedAction, selectedTime, currentPage]);
+
+    // 4. Handle Export Trigger
+    const handleExport = async () => {
+        const payload = {
+            search: debouncedSearch,
+            action: selectedAction,
+            time: selectedTime,
+            // Notice: no page or limit, export pulls the full filtered list
+        };
+
+        await exportActivityLogs(
+            navigate,
+            toast,
+            payload,
+            setIsExporting
+        );
+    };
 
     return (
         <div className="admin-container">
@@ -92,9 +110,14 @@ function Activity() {
                         <div className="list-actions">
                             <button
                                 className="action-btn primary"
-                                onClick={() => toast.info('Export functionality coming soon!')}>
-                                <i className="fas fa-download"></i>
-                                Export Logs
+                                onClick={handleExport}
+                                disabled={isExporting || emptyState}>
+                                {isExporting ? (
+                                    <i className="fas fa-spinner fa-spin"></i>
+                                ) : (
+                                    <i className="fas fa-download"></i>
+                                )}
+                                {isExporting ? 'Exporting...' : 'Export Logs'}
                             </button>
                         </div>
                     </div>
