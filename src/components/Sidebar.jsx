@@ -45,11 +45,18 @@ function Sidebar({ active }) {
                     <i className="fas fa-history"></i>
                     <span>History</span>
                 </NavLink>
-                <NavLink to="/login" className="nav-item" onClick={() => logout(toast)}>
+                {/* <NavLink to="/login" className="nav-item" onClick={() => logout(toast)}>
                     <i className="fas fa-sign-out"></i>
                     <span>Logout</span>
-                </NavLink>
+                </NavLink> */}
             </nav>
+
+            <div className="sidebar-footer">
+                <NavLink to="/login" className="logout-btn" onClick={() => logout(toast)}>
+                    <i className="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </NavLink>
+            </div>
         </aside>);
 }
 

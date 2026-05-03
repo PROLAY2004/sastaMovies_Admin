@@ -147,10 +147,10 @@ function Activity() {
                     <table className="movie-table">
                         <thead>
                             <tr>
-                                <th>Admin Details</th>
-                                <th>Action Performed</th>
-                                <th>Entity / Target</th>
-                                <th>Date & Time</th>
+                                <th>Admin_Details</th>
+                                <th>Action_Performed</th>
+                                <th>Target_Entity</th>
+                                <th>Date_&_Time</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,18 +159,17 @@ function Activity() {
                             ))}
                         </tbody>
                     </table>
-
-                    <div
-                        className="empty-state mt-4"
-                        style={{ display: emptyState ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center' }}>
-                        <div className="empty-state-icon" style={{ fontSize: '2rem', color: 'rgba(255,255,255,0.3)', marginBottom: '10px' }}>
-                            <i className="fas fa-history"></i>
-                        </div>
-                        <h3 className="empty-state-title" style={{ fontFamily: '"Oswald", sans-serif', color: '#fff' }}>No Logs Found</h3>
-                        <p className="empty-state-message" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                            No activity matches your current filters.
-                        </p>
+                </div>
+                <div
+                    className="empty-state mt-4"
+                    style={{ display: emptyState && !loading ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center' }}>
+                    <div className="empty-state-icon" style={{ fontSize: '2rem', color: 'rgba(255,255,255,0.3)', marginBottom: '10px' }}>
+                        <i className="fas fa-history"></i>
                     </div>
+                    <h3 className="empty-state-title" style={{ fontFamily: '"Oswald", sans-serif', color: '#fff' }}>No Logs Found</h3>
+                    <p className="empty-state-message" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                        No activity matches your current filters.
+                    </p>
                 </div>
 
                 {/* Pagination */}

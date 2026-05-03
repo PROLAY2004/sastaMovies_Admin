@@ -29,7 +29,19 @@ function ActivityList({ logData }) {
                 </span>
             </td>
             <td className="target-cell">
-                {logData.targetName}
+                <span className='name'>{logData.targetName}</span>
+                {logData.targetDetails?.toLowerCase().includes('imdb') ? (
+                    <a
+                        href={logData.targetDetails}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="email d-block text-decoration-none"
+                    >
+                        {logData.targetDetails}
+                    </a>
+                ) : (
+                    <p className='mb-0 email'>{logData.targetDetails}</p>
+                )}
             </td>
             <td>
                 <div className="date-cell">

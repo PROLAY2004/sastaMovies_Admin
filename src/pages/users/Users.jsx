@@ -177,18 +177,18 @@ function Users() {
                             ))}
                         </tbody>
                     </table>
+                </div>
 
-                    <div
-                        className="empty-state mt-4"
-                        style={{ display: emptyState ? 'flex' : 'none' }}>
-                        <div className="empty-state-icon">
-                            <i className="fas fa-users-slash"></i>
-                        </div>
-                        <h3 className="empty-state-title">No Users Found</h3>
-                        <p className="empty-state-message">
-                            We couldn't find any users matching your criteria.
-                        </p>
+                <div
+                    className="empty-state mt-4"
+                    style={{ display: emptyState && !loading ? 'flex' : 'none' }}>
+                    <div className="empty-state-icon">
+                        <i className="fas fa-users-slash"></i>
                     </div>
+                    <h3 className="empty-state-title">No Users Found</h3>
+                    <p className="empty-state-message">
+                        We couldn't find any users matching your criteria.
+                    </p>
                 </div>
 
                 {/* Pagination */}

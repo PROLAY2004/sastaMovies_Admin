@@ -193,18 +193,18 @@ function Movies() {
                             ))}
                         </tbody>
                     </table>
+                </div>
 
-                    <div
-                        className="empty-state mt-4"
-                        style={{ display: emptyState ? 'flex' : 'none' }}>
-                        <div className="empty-state-icon">
-                            <i className="fas fa-film"></i>
-                        </div>
-                        <h3 className="empty-state-title">No Movies Found</h3>
-                        <p className="empty-state-message">
-                            We couldn't find any movies matching your search criteria.
-                        </p>
+                <div
+                    className="empty-state mt-4"
+                    style={{ display: emptyState && !loading ? 'flex' : 'none' }}>
+                    <div className="empty-state-icon">
+                        <i className="fas fa-film"></i>
                     </div>
+                    <h3 className="empty-state-title">No Movies Found</h3>
+                    <p className="empty-state-message">
+                        We couldn't find any movies matching your search criteria.
+                    </p>
                 </div>
 
                 {/* Pagination Rendering */}
