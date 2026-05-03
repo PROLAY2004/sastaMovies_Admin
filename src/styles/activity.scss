@@ -1,0 +1,85 @@
+@import './common/root';
+
+/* We reuse .movie-table structure, but style specific activity columns */
+
+.admin-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-cell .name {
+    font-weight: 500;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.admin-cell .email {
+    font-size: 0.8rem;
+    color: $text-muted;
+}
+
+.target-cell {
+    font-weight: 500;
+    color: #e0e0e0;
+}
+
+.date-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.date-cell .date {
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.date-cell .time {
+    font-size: 0.8rem;
+    color: $text-muted;
+}
+
+/* Activity Status Badges */
+.log-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: "Oswald", sans-serif;
+    white-space: nowrap;
+
+    /* Default / Neutral */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    /* Positive Actions */
+    &.add,
+    &.renew,
+    &.unblock,
+    &.invite {
+        background-color: rgba(79, 111, 10, 0.15);
+        color: $secondary-color;
+        font-width: normal;
+        border: 1px solid rgba(158, 230, 0, 0.3);
+    }
+
+    /* Edit Actions */
+    &.edit {
+        background-color: rgba(0, 153, 255, 0.15);
+        color: #0099ff;
+        border: 1px solid rgba(0, 153, 255, 0.3);
+    }
+
+    /* Destructive Actions */
+    &.delete,
+    &.block {
+        background-color: rgba(255, 77, 77, 0.15);
+        color: $danger-color;
+        border: 1px solid rgba(255, 77, 77, 0.3);
+    }
+}

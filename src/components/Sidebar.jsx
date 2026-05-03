@@ -41,6 +41,10 @@ function Sidebar({ active }) {
                     <i className="fas fa-users"></i>
                     <span>Users</span>
                 </NavLink>
+                <NavLink to="/activity" className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}>
+                    <i className="fas fa-history"></i>
+                    <span>History</span>
+                </NavLink>
                 <NavLink to="/login" className="nav-item" onClick={() => logout(toast)}>
                     <i className="fas fa-sign-out"></i>
                     <span>Logout</span>

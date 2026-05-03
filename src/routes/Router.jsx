@@ -8,6 +8,7 @@ import Default from '../components/Default.jsx';
 import Movies from '../pages/movies/Movies.jsx';
 import Series from '../pages/series/Series.jsx';
 import Users from '../pages/users/Users.jsx';
+import Activity from '../pages/activity/Activity.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
 
 const router = createBrowserRouter([
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
 		element: (
 			<ProtectedRoute>
 				<Users />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: '/activity',
+		element: (
+			<ProtectedRoute>
+				<Activity />
 			</ProtectedRoute>
 		),
 	},
