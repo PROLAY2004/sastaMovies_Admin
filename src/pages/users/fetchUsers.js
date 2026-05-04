@@ -27,6 +27,11 @@ export default async function displayUsers(
 			setTotalPages(result.data.totalPages);
 			setLoading(false);
 			setAdminDetails(result.data.adminDetails);
+			localStorage.setItem('adminName', result.data.adminDetails.name);
+			localStorage.setItem(
+				'isSuperAdmin',
+				result.data.adminDetails.isSuperAdmin,
+			);
 
 			return result.data;
 		} else {

@@ -28,6 +28,8 @@ function Dashboard() {
             setSeriesCount(result.seriesCount);
             setUserCount(result.userCount);
             setAdminDetails(result.adminDetails);
+            localStorage.setItem('adminName', result.adminDetails.name);
+            localStorage.setItem('isSuperAdmin', result.adminDetails.isSuperAdmin);
             setLoading(false);
         }
     }

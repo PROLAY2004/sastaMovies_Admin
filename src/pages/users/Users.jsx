@@ -175,6 +175,7 @@ function Users() {
                                     setRenewModalActive={setRenewModalActive}
                                     setUserId={setUserId}
                                     setUserData={setUserData}
+                                    adminDetails={adminDetails}
                                 />
                             ))}
                         </tbody>

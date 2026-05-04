@@ -16,7 +16,7 @@ function Sidebar({ active, adminDetails }) {
                         <i className="fas fa-user-shield"></i>
                     </div>
                     <div className="user-info">
-                        <div className="username">{adminDetails.name ? adminDetails.name : 'Admin'}</div>
+                        <div className="username">{localStorage.getItem('adminName') || 'Admin'}</div>
                         <div className="user-role">Administrator</div>
                     </div>
                 </div>
@@ -37,6 +37,10 @@ function Sidebar({ active, adminDetails }) {
                     <span>Series</span>
                 </NavLink>
                 <div className="nav-section">System</div>
+                <NavLink to="/admin" style={{ display: localStorage.getItem('isSuperAdmin') === 'true' ? 'flex' : 'none' }} className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}>
+                    <i className="fas fa-user-shield"></i>
+                    <span>Admin</span>
+                </NavLink>
                 <NavLink to="/users" className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}>
                     <i className="fas fa-users"></i>
                     <span>Users</span>
@@ -45,10 +49,6 @@ function Sidebar({ active, adminDetails }) {
                     <i className="fas fa-history"></i>
                     <span>History</span>
                 </NavLink>
-                {/* <NavLink to="/login" className="nav-item" onClick={() => logout(toast)}>
-                    <i className="fas fa-sign-out"></i>
-                    <span>Logout</span>
-                </NavLink> */}
             </nav>
 
             <div className="sidebar-footer">

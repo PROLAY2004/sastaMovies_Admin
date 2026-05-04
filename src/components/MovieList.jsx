@@ -10,10 +10,10 @@ function MovieList({ movieData, onEdit, onDelete, setMovie, setDelete }) {
             <td>{movieData.rating}</td>
             <td>{movieData.runtime}</td>
             <td className="action-cell">
-                <button className="action-icon edit" onClick={() => { setMovie(movieData); onEdit(true); }}>
+                <button className="action-icon edit" title="Edit Movie" onClick={() => { setMovie(movieData); onEdit(true); }}>
                     <i className="fas fa-edit"></i>
                 </button>
-                <button className="action-icon delete" onClick={() => { onDelete(true); setDelete(movieData._id) }}>
+                <button className="action-icon delete" title="Delete Movie" onClick={() => { onDelete(true); setDelete(movieData._id) }}>
                     <i className="fas fa-trash"></i>
                 </button>
             </td>

@@ -29,6 +29,11 @@ export default async function fetchActivity(
 			setTotalPages(result.data.totalPages); // Update total pages
 			setLoading(false);
 			setAdminDetails(result.data.adminDetails);
+			localStorage.setItem('adminName', result.data.adminDetails.name);
+			localStorage.setItem(
+				'isSuperAdmin',
+				result.data.adminDetails.isSuperAdmin,
+			);
 
 			return result.data;
 		} else {

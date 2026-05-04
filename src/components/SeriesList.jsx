@@ -10,10 +10,10 @@ function SeriesList({ seriesData, onEdit, onDelete, setSeriesDetails, setDelete 
             <td>{seriesData.rating}</td>
             <td>{seriesData.contentIds.length}</td>
             <td className="action-cell">
-                <button className="action-icon edit" onClick={() => { setSeriesDetails(seriesData); onEdit(true); }}>
+                <button className="action-icon edit" title="Edit Series" onClick={() => { setSeriesDetails(seriesData); onEdit(true); }}>
                     <i className="fas fa-edit"></i>
                 </button>
-                <button className="action-icon delete" onClick={() => { onDelete(true); setDelete(seriesData._id) }}>
+                <button className="action-icon delete" title="Delete Series" onClick={() => { onDelete(true); setDelete(seriesData._id) }}>
                     <i className="fas fa-trash"></i>
                 </button>
             </td>

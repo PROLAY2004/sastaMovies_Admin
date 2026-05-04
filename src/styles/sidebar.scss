@@ -25,6 +25,13 @@
     /* Scroll inside sidebar if content overflows */
 }
 
+.sidebar-nav::-webkit-scrollbar {
+    width: 2px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: $primary-color;
+}
 /* Push Main Content right */
 .admin-main {
     margin-left: $sidebar-width;
