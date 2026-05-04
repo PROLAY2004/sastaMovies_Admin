@@ -4,9 +4,9 @@ function ActivityList({ logData }) {
     // Determine badge class based on action keyword
     const getBadgeClass = (actionName) => {
         const actionStr = actionName.toLowerCase();
-        if (actionStr.includes('uploaded') || actionStr.includes('renewed') || actionStr.includes('unblocked') || actionStr.includes('added')) return 'add';
-        if (actionStr.includes('edited')) return 'edit';
-        if (actionStr.includes('deleted') || actionStr.includes('blocked')) return 'delete';
+        if (actionStr.includes('uploaded') || actionStr.includes('renewed') || actionStr.includes('upgraded') || actionStr.includes('unblocked') || actionStr.includes('added')) return 'add';
+        if (actionStr.includes('edited') || actionStr.includes('updated')) return 'edit';
+        if (actionStr.includes('deleted') || actionStr.includes('blocked') || actionStr.includes('downgraded')) return 'delete';
         return '';
     };
 

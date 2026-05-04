@@ -198,8 +198,9 @@ function Activity() {
                 </div>
 
                 {/* Pagination */}
-                {!emptyState && !loading && (
+                {!emptyState && !loading && totalPages > 0 && (
                     <div className="pagination">
+                        {/* Previous Button */}
                         <button
                             className={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
                             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -208,21 +209,52 @@ function Activity() {
                             <i className="fas fa-angle-left"></i>
                         </button>
 
-                        {[...Array(totalPages)].map((_, i) => (
-                            <button
-                                key={i + 1}
-                                className={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
-                                onClick={() => setCurrentPage(i + 1)}
-                                style={{ background: 'transparent', border: 'none' }}>
-                                {i + 1}
-                            </button>
-                        ))}
+                        {/* Dynamic Pagination with Ellipses */}
+                        {(() => {
+                            let pages = [];
 
+                            if (totalPages <= 5) {
+                                // Show all if 5 or fewer pages
+                                pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+                            } else if (currentPage <= 3) {
+                                // Near the start: 1, 2, 3, 4, ..., Last
+                                pages = [1, 2, 3, 4, '...', totalPages];
+                            } else if (currentPage >= totalPages - 2) {
+                                // Near the end: 1, ..., Last-2, Last-1, Last
+                                pages = [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+                            } else {
+                                // In the middle: 1, ..., Prev, Current, Next, ..., Last
+                                pages = [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+                            }
+
+                            return pages.map((page, index) => {
+                                if (page === '...') {
+                                    return (
+                                        <span
+                                            key={`ellipsis-${index}`}
+                                            className="page-link disabled"
+                                            style={{ background: 'transparent', border: 'none', cursor: 'default', color: 'rgba(255,255,255,0.5)' }}>
+                                            ...
+                                        </span>
+                                    );
+                                }
+
+                                return (
+                                    <button
+                                        key={page}
+                                        className={`page-link ${currentPage === page ? 'active' : ''}`}
+                                        onClick={() => setCurrentPage(page)}
+                                        style={{ background: 'transparent', border: 'none' }}>
+                                        {page}
+                                    </button>
+                                );
+                            });
+                        })()}
+
+                        {/* Next Button */}
                         <button
                             className={`page-link ${currentPage === totalPages ? 'disabled' : ''}`}
-                            onClick={() =>
-                                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                            }
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                             disabled={currentPage === totalPages}
                             style={{ background: 'transparent', border: 'none' }}>
                             <i className="fas fa-angle-right"></i>
