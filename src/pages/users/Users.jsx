@@ -12,6 +12,7 @@ import displayUsers from './fetchUsers.js';
 import InviteUserModal from '../../components/modals/InviteUserModal.jsx';
 import RenewUserModal from '../../components/modals/RenewUserModal.jsx';
 import DeleteUserModal from '../../components/modals/DeleteUserModal.jsx';
+import UpgradationModal from '../../components/modals/UpgradationModal.jsx'
 
 function Users() {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ function Users() {
     const [inviteModalActive, setInviteModalActive] = useState(false);
     const [renewModalActive, setRenewModalActive] = useState(false);
     const [deleteModalActive, setDeleteModalActive] = useState(false);
+    const [upgradeModalActive, setUpgradeModalActive] = useState(false);
     const [loading, setLoading] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
     const [pageReload, setPageReload] = useState(0);
@@ -173,6 +175,7 @@ function Users() {
                                     refresh={setPageReload}
                                     setDeleteModalActive={setDeleteModalActive}
                                     setRenewModalActive={setRenewModalActive}
+                                    setUpgradeModalActive={setUpgradeModalActive}
                                     setUserId={setUserId}
                                     setUserData={setUserData}
                                     adminDetails={adminDetails}
@@ -227,6 +230,7 @@ function Users() {
 
                 <InviteUserModal isActive={inviteModalActive} onClose={() => setInviteModalActive(false)} refresh={setPageReload} />
                 <RenewUserModal isActive={renewModalActive} onClose={() => setRenewModalActive(false)} user={userData} refresh={setPageReload} />
+                <UpgradationModal isActive={upgradeModalActive} onClose={() => setUpgradeModalActive(false)} userId={userId} refresh={setPageReload} />
                 <DeleteUserModal isActive={deleteModalActive} onClose={() => setDeleteModalActive(false)} userId={userId} refresh={setPageReload} />
             </main>
         </div>

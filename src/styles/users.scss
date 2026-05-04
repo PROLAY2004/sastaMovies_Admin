@@ -39,6 +39,13 @@ td .text-muted {
     color: white;
 }
 
+.user-table-container::-webkit-scrollbar {
+    height: 2px;
+}
+
+.user-table-container::-webkit-scrollbar-thumb {
+    background: $primary-color;
+}
 /* User Status Badges */
 .status-badge {
     display: inline-block;

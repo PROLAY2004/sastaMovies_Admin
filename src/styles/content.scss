@@ -58,6 +58,13 @@
     overflow-x: auto;
 }
 
+.movie-table-container::-webkit-scrollbar {
+    height: 2px;
+}
+
+.movie-table-container::-webkit-scrollbar-thumb {
+    background: $primary-color;
+}
 .movie-table {
     width: 100%;
     border-collapse: collapse;
