@@ -7,6 +7,7 @@ export default async function displayUsers(
 	setUsers,
 	setLoading,
 	setTotalPages,
+	setAdminDetails,
 ) {
 	try {
 		setLoading(true);
@@ -25,6 +26,7 @@ export default async function displayUsers(
 			setUsers(result.data.users);
 			setTotalPages(result.data.totalPages);
 			setLoading(false);
+			setAdminDetails(result.data.adminDetails);
 
 			return result.data;
 		} else {

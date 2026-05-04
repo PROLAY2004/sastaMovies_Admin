@@ -11,6 +11,7 @@ import '../../styles/dashboard.scss';
 
 function Dashboard() {
     const navigate = useNavigate();
+    const [adminDetails, setAdminDetails] = useState({});
     const [movieCount, setMovieCount] = useState(0);
     const [seriesCount, setSeriesCount] = useState(0);
     const [userCount, setUserCount] = useState(0);
@@ -26,6 +27,7 @@ function Dashboard() {
             setMovieCount(result.movieCount);
             setSeriesCount(result.seriesCount);
             setUserCount(result.userCount);
+            setAdminDetails(result.adminDetails);
             setLoading(false);
         }
     }
@@ -35,7 +37,7 @@ function Dashboard() {
 
     return (
         <div className="admin-container">
-            <Sidebar active={sidebarActive} />
+            <Sidebar active={sidebarActive} adminDetails={adminDetails} />
 
             <main className="admin-main">
                 <header className="header-group">

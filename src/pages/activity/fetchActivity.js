@@ -8,6 +8,7 @@ export default async function fetchActivity(
 	setAvailableActions,
 	setLoading,
 	setTotalPages,
+	setAdminDetails,
 ) {
 	try {
 		setLoading(true);
@@ -27,6 +28,7 @@ export default async function fetchActivity(
 			setAvailableActions(result.data.allActions);
 			setTotalPages(result.data.totalPages); // Update total pages
 			setLoading(false);
+			setAdminDetails(result.data.adminDetails);
 
 			return result.data;
 		} else {

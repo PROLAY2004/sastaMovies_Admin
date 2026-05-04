@@ -16,6 +16,7 @@ import displaySeries from './fetchSeries.js';
 function Series() {
     const navigate = useNavigate();
     const [sidebarActive, setSidebarActive] = useState(false);
+    const [adminDetails, setAdminDetails] = useState({});
 
     // Modal States
     const [addSeriesModal, setAddSeriesModal] = useState(false);
@@ -74,6 +75,7 @@ function Series() {
             setYears,
             setLoading,
             setTotalPages,
+            setAdminDetails
         );
 
         if (seriesData && seriesData.series.length === 0) {
@@ -89,7 +91,7 @@ function Series() {
 
     return (
         <div className="admin-container">
-            <Sidebar active={sidebarActive} />
+            <Sidebar active={sidebarActive} adminDetails={adminDetails} />
 
             <main className="admin-main">
                 <header className="header-group">

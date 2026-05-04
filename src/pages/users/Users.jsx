@@ -15,6 +15,7 @@ import DeleteUserModal from '../../components/modals/DeleteUserModal.jsx';
 
 function Users() {
     const navigate = useNavigate();
+    const [adminDetails, setAdminDetails] = useState({});
 
     // UI States
     const [sidebarActive, setSidebarActive] = useState(false);
@@ -68,7 +69,8 @@ function Users() {
             payload,
             setUsers,
             setLoading,
-            setTotalPages
+            setTotalPages,
+            setAdminDetails
         );
 
         if (userData && userData.users.length === 0) {
@@ -86,7 +88,7 @@ function Users() {
 
     return (
         <div className="admin-container">
-            <Sidebar active={sidebarActive} />
+            <Sidebar active={sidebarActive} adminDetails={adminDetails} />
 
             <main className="admin-main">
                 <header className="header-group">

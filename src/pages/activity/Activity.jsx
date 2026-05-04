@@ -15,6 +15,7 @@ import exportActivityLogs from './exportActivity.js';
 function Activity() {
     const navigate = useNavigate();
     const [sidebarActive, setSidebarActive] = useState(false);
+    const [adminDetails, setAdminDetails] = useState({});
 
     // Data states
     const [logs, setLogs] = useState([]);
@@ -63,7 +64,8 @@ function Activity() {
             setLogs,
             setAvailableActions,
             setLoading,
-            setTotalPages
+            setTotalPages,
+            setAdminDetails
         );
 
         if (logData && logData.activities && logData.activities.length === 0) {
@@ -96,7 +98,7 @@ function Activity() {
 
     return (
         <div className="admin-container">
-            <Sidebar active={sidebarActive} />
+            <Sidebar active={sidebarActive} adminDetails={adminDetails} />
 
             <main className="admin-main">
                 <header className="header-group">

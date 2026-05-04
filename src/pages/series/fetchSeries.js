@@ -9,6 +9,7 @@ export default async function displaySeries(
 	setYears,
 	setLoading,
 	setTotalPages,
+	setAdminDetails,
 ) {
 	try {
 		setLoading(true);
@@ -29,6 +30,7 @@ export default async function displaySeries(
 			setYears(result.data.allYears);
 			setTotalPages(result.data.totalPages);
 			setLoading(false);
+			setAdminDetails(result.data.adminDetails);
 
 			return result.data;
 		} else {

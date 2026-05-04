@@ -9,6 +9,7 @@ export default async function displayMovies(
 	setYears,
 	setLoading,
 	setTotalPages,
+	setAdminDetails,
 ) {
 	try {
 		setLoading(true);
@@ -29,6 +30,7 @@ export default async function displayMovies(
 			setYears(result.data.allYears);
 			setTotalPages(result.data.totalPages); // Update total pages
 			setLoading(false);
+			setAdminDetails(result.data.adminDetails);
 
 			return result.data;
 		} else {

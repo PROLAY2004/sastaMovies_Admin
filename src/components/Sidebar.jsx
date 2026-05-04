@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import '../styles/sidebar.scss';
 import logout from '../utils/logout.js';
 
-function Sidebar({ active }) {
+function Sidebar({ active, adminDetails }) {
     return (
         <aside className={"admin-sidebar" + (active ? " active" : "")}>
             <div className="sidebar-header">
@@ -16,7 +16,7 @@ function Sidebar({ active }) {
                         <i className="fas fa-user-shield"></i>
                     </div>
                     <div className="user-info">
-                        <div className="username">Admin</div>
+                        <div className="username">{adminDetails.name ? adminDetails.name : 'Admin'}</div>
                         <div className="user-role">Administrator</div>
                     </div>
                 </div>

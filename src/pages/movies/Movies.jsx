@@ -16,6 +16,7 @@ import displayMovies from './fetchMovie.js';
 function Movies() {
     const navigate = useNavigate();
     const [sidebarActive, setSidebarActive] = useState(false);
+    const [adminDetails, setAdminDetails] = useState({});
     const [addModalActive, setAddModalActive] = useState(false);
     const [deleteModalActive, setDeleteModalActive] = useState(false);
     const [editModalActive, setEditModalActive] = useState(false);
@@ -73,6 +74,7 @@ function Movies() {
             setYears,
             setLoading,
             setTotalPages,
+            setAdminDetails
         );
 
         if (movieData && movieData.movies.length === 0) {
@@ -88,7 +90,7 @@ function Movies() {
 
     return (
         <div className="admin-container">
-            <Sidebar active={sidebarActive} />
+            <Sidebar active={sidebarActive} adminDetails={adminDetails} />
 
             <main className="admin-main">
                 <header className="header-group">
