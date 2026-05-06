@@ -46,7 +46,14 @@ function AdminList({ admin, refresh, setAdminId, setSelectedAdminData, setPermis
                 </button>
 
                 {/* Downgrade to User */}
-                <button className="action-icon edit" title="Downgrade to User" onClick={() => { setAdminId(admin._id); setDowngradeModalActive(true); }}>
+                {/* Downgrade to User */}
+                <button
+                    className="action-icon edit"
+                    title="Downgrade to User"
+                    onClick={() => {
+                        setSelectedAdminData(admin); // <-- CHANGE THIS!
+                        setDowngradeModalActive(true);
+                    }}>
                     <i className="fas fa-arrow-down"></i>
                 </button>
 

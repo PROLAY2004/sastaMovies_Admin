@@ -1,13 +1,13 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function downgradeAdminApi(adminId, navigate, toast) {
+export default async function downgradeAdminApi(payload, navigate, toast) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
 			'POST',
 			'/user/admin/downgrade',
-			{ adminId },
+			payload,
 		);
 		const result = await response.json();
 

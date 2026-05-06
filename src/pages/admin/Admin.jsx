@@ -227,7 +227,7 @@ function Admin() {
 
                 <AddAdminModal isActive={addModalActive} onClose={() => setAddModalActive(false)} refresh={setPageReload} />
                 <UpdatePermissionsModal isActive={permissionsModalActive} onClose={() => setPermissionsModalActive(false)} adminData={selectedAdminData} refresh={setPageReload} />
-                <DowngradeAdminModal isActive={downgradeModalActive} onClose={() => setDowngradeModalActive(false)} adminId={adminId} refresh={setPageReload} />
+                <DowngradeAdminModal isActive={downgradeModalActive} onClose={() => setDowngradeModalActive(false)} adminData={selectedAdminData} refresh={setPageReload} />
                 <DeleteAdminModal isActive={deleteModalActive} onClose={() => setDeleteModalActive(false)} adminId={adminId} refresh={setPageReload} />
             </main>
         </div>
