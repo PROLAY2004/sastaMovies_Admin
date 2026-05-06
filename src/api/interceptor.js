@@ -3,14 +3,22 @@ import configaration from '../config/config.js';
 
 const api = new Api();
 
-export default async function apiInterceptor(method, endpoint, body = null) {
+export default async function apiInterceptor(
+	navigate,
+	toast,
+	method,
+	endpoint,
+	body = null,
+) {
 	try {
 		const access_token = localStorage.getItem('access_token');
 		const refresh_token = localStorage.getItem('refresh_token');
 		let response;
 
-		if (!access_token && !refresh_token) {
-			window.location.href = '/login';
+		if (!access_token || !refresh_token) {
+			navigate('/login', { replace: true });
+
+			throw new Error('Session Expired. Please Login Again.');
 		}
 
 		switch (method) {
@@ -59,7 +67,7 @@ export default async function apiInterceptor(method, endpoint, body = null) {
 
 		if (response.status === 401) {
 			const res = await api.getApi(
-				`${configaration.BASE_URL}/user/auth/refresh`,
+				`${configaration.BASE_URL}/user/auth/admin/refresh`,
 				refresh_token,
 			);
 
@@ -68,11 +76,11 @@ export default async function apiInterceptor(method, endpoint, body = null) {
 			} else {
 				const result = await res.json();
 
-				localStorage.setItem('access_token', result.access_token);
-				localStorage.setItem('refresh_token', result.refresh_token);
+				localStorage.setItem('access_token', result.data.access_token);
+				localStorage.setItem('refresh_token', result.data.refresh_token);
 			}
 
-			return apiInterceptor(method, endpoint, body);
+			return apiInterceptor(navigate, toast, method, endpoint, body);
 		}
 
 		return response;

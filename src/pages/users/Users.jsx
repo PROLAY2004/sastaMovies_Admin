@@ -2,82 +2,80 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import '../../styles/content.scss';
+import '../../styles/users.scss';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
-import AddMovieModal from '../../components/modals/AddMovieModal.jsx';
-import EditMovieModal from '../../components/modals/EditMovieModal.jsx';
-import DeleteModal from '../../components/modals/DeleteModal.jsx';
-import MovieList from '../../components/MovieList.jsx';
 import ListLoader from '../../components/loader/ListLoader.jsx';
-import displayMovies from './fetchMovie.js';
+import UserList from '../../components/UserList.jsx';
+import displayUsers from './fetchUsers.js';
+import InviteUserModal from '../../components/modals/InviteUserModal.jsx';
+import RenewUserModal from '../../components/modals/RenewUserModal.jsx';
+import DeleteUserModal from '../../components/modals/DeleteUserModal.jsx';
+import UpgradationModal from '../../components/modals/UpgradationModal.jsx'
 
-function Movies() {
+function Users() {
     const navigate = useNavigate();
-    const [sidebarActive, setSidebarActive] = useState(false);
     const [adminDetails, setAdminDetails] = useState({});
-    const [addModalActive, setAddModalActive] = useState(false);
+
+    // UI States
+    const [sidebarActive, setSidebarActive] = useState(false);
+    const [inviteModalActive, setInviteModalActive] = useState(false);
+    const [renewModalActive, setRenewModalActive] = useState(false);
     const [deleteModalActive, setDeleteModalActive] = useState(false);
-    const [editModalActive, setEditModalActive] = useState(false);
+    const [upgradeModalActive, setUpgradeModalActive] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [emptyState, setEmptyState] = useState(false);
+    const [pageReload, setPageReload] = useState(0);
 
-    // Data states
-    const [movies, setMovies] = useState([]);
-    const [genres, setGenres] = useState([]);
-    const [years, setYears] = useState([]);
-    const [movieDetails, setMovieDetails] = useState({});
-    const [deleteId, setDeleteId] = useState('');
+    // Data States
+    const [users, setUsers] = useState([]);
+    const [userId, setUserId] = useState('');
+    const [userData, setUserData] = useState({});
+    const [selectedUser, setSelectedUser] = useState(null);
 
-    // Filter and Pagination states
+    // Filter, Sort, and Pagination States
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
-    const [selectedGenre, setSelectedGenre] = useState('all');
-    const [selectedYear, setSelectedYear] = useState('all');
+    const [selectedStatus, setSelectedStatus] = useState('all');
+    const [sortOption, setSortOption] = useState('newest'); // Replaced role with sort
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // UI states
-    const [emptyState, setEmptyState] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [pageReload, setPageReload] = useState(0);
-
-    // 1. Debounce Search Implementation (Triggers 400ms after user stops typing)
+    // 1. Debounce Search Implementation
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchQuery);
         }, 400);
-
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    // 2. Reset back to Page 1 if any filter logic is changed
+    // 2. Reset back to Page 1 if any filter or sort logic is changed
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearch, selectedGenre, selectedYear]);
+    }, [debouncedSearch, selectedStatus, sortOption]);
 
-    // 3. Fetching movies triggering on state change
-    const fetchMovies = async () => {
+    // 3. Fetching users on state change
+    const fetchUsers = async () => {
         const payload = {
             search: debouncedSearch,
-            genre: selectedGenre,
-            year: selectedYear,
+            status: selectedStatus,
+            sort: sortOption,
             page: currentPage,
             limit: 5,
         };
 
-        const movieData = await displayMovies(
+        const userData = await displayUsers(
             navigate,
             toast,
             payload,
-            setMovies,
-            setGenres,
-            setYears,
+            setUsers,
             setLoading,
             setTotalPages,
             setAdminDetails
         );
 
-        if (movieData && movieData.movies.length === 0) {
+        if (userData && userData.users.length === 0) {
             setEmptyState(true);
         } else {
             setEmptyState(false);
@@ -85,8 +83,10 @@ function Movies() {
     };
 
     useEffect(() => {
-        fetchMovies();
-    }, [debouncedSearch, selectedGenre, selectedYear, currentPage, pageReload]);
+        fetchUsers();
+    }, [debouncedSearch, selectedStatus, sortOption, currentPage, pageReload]);
+
+
 
     return (
         <div className="admin-container">
@@ -100,25 +100,25 @@ function Movies() {
                     />
 
                     <div className="list-header">
-                        <h1 className="list-title">Movie Library</h1>
+                        <h1 className="list-title">Manage Users</h1>
                         <div className="list-actions">
                             <button
                                 className="action-btn primary"
-                                onClick={() => setAddModalActive(true)}>
-                                <i className="fas fa-plus"></i>
-                                Add Movie
+                                onClick={() => setInviteModalActive(true)}>
+                                <i className="fas fa-user-plus"></i>
+                                Invite User
                             </button>
                         </div>
                     </div>
                 </header>
 
-                {/* Filters */}
+                {/* Filters & Sorting */}
                 <div className="search-filter d-flex gap-2 flex-sm-row">
                     <div className="search-box w-100">
                         <i className="fas fa-search"></i>
                         <input
                             type="text"
-                            placeholder="Search movies..."
+                            placeholder="Search by name or email..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -126,40 +126,26 @@ function Movies() {
                     <div className="filter-group d-flex gap-2">
                         <div className="filter-dropdown w-100">
                             <select
-                                className="genre-filter w-100 h-100"
-                                value={selectedGenre}
-                                onChange={(e) => setSelectedGenre(e.target.value)}>
-                                <option value="all">All Genres</option>
-
-                                {/* FIX: Keep selected genre in dropdown even if no movies exist */}
-                                {selectedGenre !== 'all' && !genres.includes(selectedGenre) && (
-                                    <option value={selectedGenre}>{selectedGenre}</option>
-                                )}
-
-                                {genres.map((genre) => (
-                                    <option value={genre} key={genre}>
-                                        {genre}
-                                    </option>
-                                ))}
+                                className="status-filter w-100 h-100"
+                                value={selectedStatus}
+                                onChange={(e) => setSelectedStatus(e.target.value)}>
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="blocked">Blocked</option>
+                                <option value="expired">Expired</option>
                             </select>
                         </div>
                         <div className="filter-dropdown w-100">
                             <select
-                                className="year-filter w-100 h-100"
-                                value={selectedYear}
-                                onChange={(e) => setSelectedYear(e.target.value)}>
-                                <option value="all">All Years</option>
-
-                                {/* FIX: Keep selected year in dropdown even if no movies exist */}
-                                {selectedYear !== 'all' && !years.some(y => String(y) === String(selectedYear)) && (
-                                    <option value={selectedYear}>{selectedYear}</option>
-                                )}
-
-                                {years.map((year) => (
-                                    <option value={year} key={year}>
-                                        {year}
-                                    </option>
-                                ))}
+                                className="sort-filter w-100 h-100"
+                                value={sortOption}
+                                onChange={(e) => setSortOption(e.target.value)}>
+                                <option value="newest">Newest First</option>
+                                <option value="name_asc">Name (A to Z)</option>
+                                <option value="name_desc">Name (Z to A)</option>
+                                <option value="login_recent">Recently Logged In</option>
+                                <option value="expiry_soon">Expiring Soon</option>
+                                <option value="expiry_latest">Longest Expiry</option>
                             </select>
                         </div>
                     </div>
@@ -168,29 +154,31 @@ function Movies() {
                 <ListLoader loading={loading} />
 
                 <div
-                    className="movie-table-container mb-4"
+                    className="user-table-container mb-4"
                     style={{ display: loading ? 'none' : 'block' }}>
-                    <table className="movie-table">
+                    <table className="user-table">
                         <thead>
                             <tr>
-                                <th>Poster</th>
-                                <th>Name</th>
-                                <th>Genre</th>
-                                <th>Year</th>
-                                <th>Ratings</th>
-                                <th>Runtime</th>
+                                <th>User Details</th>
+                                <th>Created_At</th>
+                                <th>Last_Login</th>
+                                <th>Valid_Till</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {movies.map((movie) => (
-                                <MovieList
-                                    movieData={movie}
-                                    key={movie._id}
-                                    onEdit={setEditModalActive}
-                                    onDelete={setDeleteModalActive}
-                                    setMovie={setMovieDetails}
-                                    setDelete={setDeleteId}
+                            {users.map((user) => (
+                                <UserList
+                                    key={user._id}
+                                    user={user}
+                                    refresh={setPageReload}
+                                    setDeleteModalActive={setDeleteModalActive}
+                                    setRenewModalActive={setRenewModalActive}
+                                    setUpgradeModalActive={setUpgradeModalActive}
+                                    setUserId={setUserId}
+                                    setUserData={setUserData}
+                                    adminDetails={adminDetails}
                                 />
                             ))}
                         </tbody>
@@ -201,15 +189,15 @@ function Movies() {
                     className="empty-state mt-4"
                     style={{ display: emptyState && !loading ? 'flex' : 'none' }}>
                     <div className="empty-state-icon">
-                        <i className="fas fa-film"></i>
+                        <i className="fas fa-users-slash"></i>
                     </div>
-                    <h3 className="empty-state-title">No Movies Found</h3>
+                    <h3 className="empty-state-title">No Users Found</h3>
                     <p className="empty-state-message">
-                        We couldn't find any movies matching your search criteria.
+                        We couldn't find any users matching your criteria.
                     </p>
                 </div>
 
-                {/* Pagination Rendering */}
+                {/* Pagination */}
                 {!emptyState && !loading && totalPages > 0 && (
                     <div className="pagination">
                         {/* Previous Button */}
@@ -274,26 +262,13 @@ function Movies() {
                     </div>
                 )}
 
-                <AddMovieModal
-                    isActive={addModalActive}
-                    onClose={() => setAddModalActive(false)}
-                    refresh={setPageReload}
-                />
-                <EditMovieModal
-                    isActive={editModalActive}
-                    onClose={() => setEditModalActive(false)}
-                    movieData={movieDetails}
-                    refresh={setPageReload}
-                />
-                <DeleteModal
-                    isActive={deleteModalActive}
-                    onClose={() => setDeleteModalActive(false)}
-                    contentId={deleteId}
-                    refresh={setPageReload}
-                />
+                <InviteUserModal isActive={inviteModalActive} onClose={() => setInviteModalActive(false)} refresh={setPageReload} />
+                <RenewUserModal isActive={renewModalActive} onClose={() => setRenewModalActive(false)} user={userData} refresh={setPageReload} />
+                <UpgradationModal isActive={upgradeModalActive} onClose={() => setUpgradeModalActive(false)} userId={userId} refresh={setPageReload} />
+                <DeleteUserModal isActive={deleteModalActive} onClose={() => setDeleteModalActive(false)} userId={userId} refresh={setPageReload} />
             </main>
         </div>
     );
 }
 
-export default Movies;
+export default Users;

@@ -6,26 +6,28 @@ import '../../styles/content.scss';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
-import AddMovieModal from '../../components/modals/AddMovieModal.jsx';
-import EditMovieModal from '../../components/modals/EditMovieModal.jsx';
-import DeleteModal from '../../components/modals/DeleteModal.jsx';
-import MovieList from '../../components/MovieList.jsx';
 import ListLoader from '../../components/loader/ListLoader.jsx';
-import displayMovies from './fetchMovie.js';
+import SeriesList from '../../components/SeriesList.jsx';
+import AddSeriesModal from '../../components/modals/AddSeriesModal.jsx';
+import EditSeriesModal from '../../components/modals/EditSeriesModal.jsx';
+import DeleteModal from '../../components/modals/DeleteModal.jsx';
+import displaySeries from './fetchSeries.js';
 
-function Movies() {
+function Series() {
     const navigate = useNavigate();
     const [sidebarActive, setSidebarActive] = useState(false);
     const [adminDetails, setAdminDetails] = useState({});
-    const [addModalActive, setAddModalActive] = useState(false);
-    const [deleteModalActive, setDeleteModalActive] = useState(false);
+
+    // Modal States
+    const [addSeriesModal, setAddSeriesModal] = useState(false);
     const [editModalActive, setEditModalActive] = useState(false);
+    const [deleteModalActive, setDeleteModalActive] = useState(false);
 
     // Data states
-    const [movies, setMovies] = useState([]);
+    const [series, setSeries] = useState([]);
     const [genres, setGenres] = useState([]);
     const [years, setYears] = useState([]);
-    const [movieDetails, setMovieDetails] = useState({});
+    const [seriesDetails, setSeriesDetails] = useState({});
     const [deleteId, setDeleteId] = useState('');
 
     // Filter and Pagination states
@@ -41,12 +43,11 @@ function Movies() {
     const [loading, setLoading] = useState(true);
     const [pageReload, setPageReload] = useState(0);
 
-    // 1. Debounce Search Implementation (Triggers 400ms after user stops typing)
+    // 1. Debounce Search Implementation
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchQuery);
         }, 400);
-
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
@@ -55,8 +56,8 @@ function Movies() {
         setCurrentPage(1);
     }, [debouncedSearch, selectedGenre, selectedYear]);
 
-    // 3. Fetching movies triggering on state change
-    const fetchMovies = async () => {
+    // 3. Fetching series triggering on state change
+    const fetchAllSeries = async () => {
         const payload = {
             search: debouncedSearch,
             genre: selectedGenre,
@@ -65,11 +66,11 @@ function Movies() {
             limit: 5,
         };
 
-        const movieData = await displayMovies(
+        const seriesData = await displaySeries(
             navigate,
             toast,
             payload,
-            setMovies,
+            setSeries,
             setGenres,
             setYears,
             setLoading,
@@ -77,7 +78,7 @@ function Movies() {
             setAdminDetails
         );
 
-        if (movieData && movieData.movies.length === 0) {
+        if (seriesData && seriesData.series.length === 0) {
             setEmptyState(true);
         } else {
             setEmptyState(false);
@@ -85,7 +86,7 @@ function Movies() {
     };
 
     useEffect(() => {
-        fetchMovies();
+        fetchAllSeries();
     }, [debouncedSearch, selectedGenre, selectedYear, currentPage, pageReload]);
 
     return (
@@ -100,13 +101,13 @@ function Movies() {
                     />
 
                     <div className="list-header">
-                        <h1 className="list-title">Movie Library</h1>
+                        <h1 className="list-title">Series Library</h1>
                         <div className="list-actions">
                             <button
-                                className="action-btn primary"
-                                onClick={() => setAddModalActive(true)}>
+                                onClick={() => setAddSeriesModal(true)}
+                                className="action-btn primary">
                                 <i className="fas fa-plus"></i>
-                                Add Movie
+                                Add Series
                             </button>
                         </div>
                     </div>
@@ -118,7 +119,7 @@ function Movies() {
                         <i className="fas fa-search"></i>
                         <input
                             type="text"
-                            placeholder="Search movies..."
+                            placeholder="Search series..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -131,7 +132,6 @@ function Movies() {
                                 onChange={(e) => setSelectedGenre(e.target.value)}>
                                 <option value="all">All Genres</option>
 
-                                {/* FIX: Keep selected genre in dropdown even if no movies exist */}
                                 {selectedGenre !== 'all' && !genres.includes(selectedGenre) && (
                                     <option value={selectedGenre}>{selectedGenre}</option>
                                 )}
@@ -150,7 +150,6 @@ function Movies() {
                                 onChange={(e) => setSelectedYear(e.target.value)}>
                                 <option value="all">All Years</option>
 
-                                {/* FIX: Keep selected year in dropdown even if no movies exist */}
                                 {selectedYear !== 'all' && !years.some(y => String(y) === String(selectedYear)) && (
                                     <option value={selectedYear}>{selectedYear}</option>
                                 )}
@@ -178,18 +177,18 @@ function Movies() {
                                 <th>Genre</th>
                                 <th>Year</th>
                                 <th>Ratings</th>
-                                <th>Runtime</th>
+                                <th>Seasons</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {movies.map((movie) => (
-                                <MovieList
-                                    movieData={movie}
-                                    key={movie._id}
+                            {series.map((item) => (
+                                <SeriesList
+                                    key={item._id}
+                                    seriesData={item}
                                     onEdit={setEditModalActive}
                                     onDelete={setDeleteModalActive}
-                                    setMovie={setMovieDetails}
+                                    setSeriesDetails={setSeriesDetails}
                                     setDelete={setDeleteId}
                                 />
                             ))}
@@ -201,11 +200,11 @@ function Movies() {
                     className="empty-state mt-4"
                     style={{ display: emptyState && !loading ? 'flex' : 'none' }}>
                     <div className="empty-state-icon">
-                        <i className="fas fa-film"></i>
+                        <i className="fas fa-tv"></i>
                     </div>
-                    <h3 className="empty-state-title">No Movies Found</h3>
+                    <h3 className="empty-state-title">No Series Found</h3>
                     <p className="empty-state-message">
-                        We couldn't find any movies matching your search criteria.
+                        We couldn't find any series matching your search criteria.
                     </p>
                 </div>
 
@@ -274,15 +273,15 @@ function Movies() {
                     </div>
                 )}
 
-                <AddMovieModal
-                    isActive={addModalActive}
-                    onClose={() => setAddModalActive(false)}
+                <AddSeriesModal
+                    isActive={addSeriesModal}
+                    onClose={() => setAddSeriesModal(false)}
                     refresh={setPageReload}
                 />
-                <EditMovieModal
+                <EditSeriesModal
                     isActive={editModalActive}
                     onClose={() => setEditModalActive(false)}
-                    movieData={movieDetails}
+                    seriesData={seriesDetails}
                     refresh={setPageReload}
                 />
                 <DeleteModal
@@ -290,10 +289,12 @@ function Movies() {
                     onClose={() => setDeleteModalActive(false)}
                     contentId={deleteId}
                     refresh={setPageReload}
+                // Optional: If you need to map this strictly to a series delete route, 
+                // ensure your generic DeleteModal supports dynamic route passing or creates a generic delete content endpoint.
                 />
             </main>
         </div>
     );
 }
 
-export default Movies;
+export default Series;

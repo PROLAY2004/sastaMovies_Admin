@@ -10,7 +10,7 @@
 .header-group {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     margin-bottom: 2rem;
 }
 
@@ -23,28 +23,6 @@
 .dashboard-actions {
     display: flex;
     gap: 1rem;
-}
-
-.action-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 4px;
-    font-family: "Oswald", sans-serif;
-    font-size: 0.9rem;
-    text-decoration: none;
-    transition: all 0.3s;
-}
-
-.action-btn.primary {
-    background-color: $secondary-color;
-    color: black;
-}
-
-.action-btn.primary:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
 }
 
 .stats-grid {
@@ -122,6 +100,7 @@
 .upload-item {
     background-color: $bg-dark;
     border-radius: 8px;
+    text-decoration: none;
     overflow: hidden;
     transition: all 0.3s;
 }
@@ -145,6 +124,7 @@
 .upload-title {
     font-family: "Oswald", sans-serif;
     font-size: 1rem;
+    color: $text-color;
     margin-bottom: 0.5rem;
     white-space: nowrap;
     overflow: hidden;

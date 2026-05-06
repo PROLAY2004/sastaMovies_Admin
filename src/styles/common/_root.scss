@@ -1,4 +1,6 @@
 @import './variables';
+@import './modal';
+@import './loader';
 
 * {
     margin: 0;
@@ -11,4 +13,114 @@ body {
     background-color: $bg-darker !important;
     color: $text-color !important;
     height: 100vh;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.action-btn.primary {
+    background-color: $secondary-color;
+    color: black;
+}
+
+.action-btn.primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn.cancel {
+    background: #222;
+    color: #aaa;
+}
+
+.btn.cancel:hover {
+    background: #333;
+}
+
+.btn.submit {
+    background: #9ee600;
+    color: #000;
+}
+
+.btn.submit:disabled {
+    background: #9ee600;
+    color: #000;
+    opacity: 0.5;
+    cursor: not-allowed !important;
+}
+
+.btn.submit:first-child {
+    background: #9ee600;
+}
+
+.btn.submit:hover {
+    background: #8dc500;
+    color: #000;
+}
+.btn.danger {
+    background: #ff4d4d;
+    color: #fff;
+}
+
+.btn.danger:hover,
+.btn.danger:active,
+.btn.danger:focus,
+.btn.danger:disabled {
+    background: #ff6666 !important;
+}
+
+.close-btn {
+    font-size: 30px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.close-btn:hover {
+    color: #fff;
+}
+.small-btn {
+    background: #1f1f1f !important;
+    color: $text-muted !important;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.small-btn:hover {
+    background: $primary-color !important;
+    color: #000 !important;
+}
+
+.mini-btn {
+    background: #1f1f1f;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.mini-btn:hover {
+    background: $primary-color;
+    color: #000;
 }

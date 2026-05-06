@@ -6,7 +6,11 @@ import ProtectedRoute from './ProtectedRoute.jsx';
 import Login from '../pages/login/Login.jsx';
 import Default from '../components/Default.jsx';
 import Movies from '../pages/movies/Movies.jsx';
+import Series from '../pages/series/Series.jsx';
+import Users from '../pages/users/Users.jsx';
+import Activity from '../pages/activity/Activity.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
+import Admin from '../pages/admin/Admin.jsx';
 
 const router = createBrowserRouter([
 	{
@@ -34,6 +38,38 @@ const router = createBrowserRouter([
 		element: (
 			<ProtectedRoute>
 				<Movies />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: '/series',
+		element: (
+			<ProtectedRoute>
+				<Series />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: '/users',
+		element: (
+			<ProtectedRoute>
+				<Users />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: '/activity',
+		element: (
+			<ProtectedRoute>
+				<Activity />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: '/admin',
+		element: (
+			<ProtectedRoute>
+				<Admin />
 			</ProtectedRoute>
 		),
 	},

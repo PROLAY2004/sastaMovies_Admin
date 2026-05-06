@@ -1,0 +1,209 @@
+// /* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.add-modal {
+    max-height: 95vh;
+    overflow-y: auto;
+    border-radius: 16px 0 0 16px;
+}
+
+.custom-modal {
+    font-family: "Oswald", sans-serif;
+    width: 500px;
+    background: #141414;
+    padding: 20px;
+    color: #fff;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s ease;
+}
+
+.add-modal::-webkit-scrollbar {
+    width: 2px;
+}
+
+.add-modal::-webkit-scrollbar-thumb {
+    background: $primary-color;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+input,
+select {
+    background: #0a0a0a;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 10px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus,
+select:focus {
+    border-color: $primary-color;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.poster-preview {
+    margin: auto;
+    margin-top: 8px;
+    height: 100px;
+    border-radius: 10px;
+    background: #0a0a0a;
+    border: 1px dashed #333;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+        aspect-ratio: 16/9;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* EXTRA CSS ONLY */
+
+.delete-modal {
+    max-width: 420px;
+    border-radius: 16px;
+}
+
+.delete-warning {
+    font-size: 13px;
+    color: #ff4d4d;
+}
+
+.season-block {
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 12px;
+    background: #0f0f0f;
+}
+
+.season-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    h3 {
+        font-size: 14px;
+        color: $secondary-color;
+    }
+}
+
+/* Episode */
+.episode-block {
+    border: 1px dashed #2a2a2a;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.episode-header {
+    margin-bottom: 10px;
+
+    span {
+        font-size: 13px;
+        color: $text-muted;
+    }
+}
+
+.season-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Episode buttons inline */
+.episode-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* Danger outline button (clean minimal look) */
+.danger-outline {
+    border: 1px solid $danger-color;
+    background: transparent;
+    color: $danger-color;
+}
+
+.danger-outline:hover {
+    background: $danger-color;
+    color: #fff;
+}
+@media(max-width:400px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}

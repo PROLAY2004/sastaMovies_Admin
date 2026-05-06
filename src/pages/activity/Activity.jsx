@@ -1,83 +1,74 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import '../../styles/content.scss';
+import '../../styles/activity.scss';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import Hambargar from '../../components/Hambargar.jsx';
-import AddMovieModal from '../../components/modals/AddMovieModal.jsx';
-import EditMovieModal from '../../components/modals/EditMovieModal.jsx';
-import DeleteModal from '../../components/modals/DeleteModal.jsx';
-import MovieList from '../../components/MovieList.jsx';
 import ListLoader from '../../components/loader/ListLoader.jsx';
-import displayMovies from './fetchMovie.js';
+import ActivityList from '../../components/ActivityList.jsx';
+import fetchActivityLogs from './fetchActivity.js';
+import exportActivityLogs from './exportActivity.js';
 
-function Movies() {
+function Activity() {
     const navigate = useNavigate();
     const [sidebarActive, setSidebarActive] = useState(false);
     const [adminDetails, setAdminDetails] = useState({});
-    const [addModalActive, setAddModalActive] = useState(false);
-    const [deleteModalActive, setDeleteModalActive] = useState(false);
-    const [editModalActive, setEditModalActive] = useState(false);
 
     // Data states
-    const [movies, setMovies] = useState([]);
-    const [genres, setGenres] = useState([]);
-    const [years, setYears] = useState([]);
-    const [movieDetails, setMovieDetails] = useState({});
-    const [deleteId, setDeleteId] = useState('');
+    const [logs, setLogs] = useState([]);
+    const [availableActions, setAvailableActions] = useState([]);
 
     // Filter and Pagination states
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
-    const [selectedGenre, setSelectedGenre] = useState('all');
-    const [selectedYear, setSelectedYear] = useState('all');
+    const [selectedAction, setSelectedAction] = useState('all');
+    const [selectedTime, setSelectedTime] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
     // UI states
     const [emptyState, setEmptyState] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [pageReload, setPageReload] = useState(0);
+    const [isExporting, setIsExporting] = useState(false); // Export loading state
 
-    // 1. Debounce Search Implementation (Triggers 400ms after user stops typing)
+    // 1. Debounce Search
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchQuery);
         }, 400);
-
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    // 2. Reset back to Page 1 if any filter logic is changed
+    // 2. Reset page on filter change
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearch, selectedGenre, selectedYear]);
+    }, [debouncedSearch, selectedAction, selectedTime]);
 
-    // 3. Fetching movies triggering on state change
-    const fetchMovies = async () => {
+    // 3. Fetch Data matching the Movies.jsx pattern
+    const loadLogs = async () => {
         const payload = {
             search: debouncedSearch,
-            genre: selectedGenre,
-            year: selectedYear,
+            action: selectedAction,
+            time: selectedTime,
             page: currentPage,
             limit: 5,
         };
 
-        const movieData = await displayMovies(
+        const logData = await fetchActivityLogs(
             navigate,
             toast,
             payload,
-            setMovies,
-            setGenres,
-            setYears,
+            setLogs,
+            setAvailableActions,
             setLoading,
             setTotalPages,
             setAdminDetails
         );
 
-        if (movieData && movieData.movies.length === 0) {
+        if (logData && logData.activities && logData.activities.length === 0) {
             setEmptyState(true);
         } else {
             setEmptyState(false);
@@ -85,8 +76,25 @@ function Movies() {
     };
 
     useEffect(() => {
-        fetchMovies();
-    }, [debouncedSearch, selectedGenre, selectedYear, currentPage, pageReload]);
+        loadLogs();
+    }, [debouncedSearch, selectedAction, selectedTime, currentPage]);
+
+    // 4. Handle Export Trigger
+    const handleExport = async () => {
+        const payload = {
+            search: debouncedSearch,
+            action: selectedAction,
+            time: selectedTime,
+            // Notice: no page or limit, export pulls the full filtered list
+        };
+
+        await exportActivityLogs(
+            navigate,
+            toast,
+            payload,
+            setIsExporting
+        );
+    };
 
     return (
         <div className="admin-container">
@@ -100,13 +108,18 @@ function Movies() {
                     />
 
                     <div className="list-header">
-                        <h1 className="list-title">Movie Library</h1>
+                        <h1 className="list-title">Activity Logs</h1>
                         <div className="list-actions">
                             <button
                                 className="action-btn primary"
-                                onClick={() => setAddModalActive(true)}>
-                                <i className="fas fa-plus"></i>
-                                Add Movie
+                                onClick={handleExport}
+                                disabled={isExporting || emptyState}>
+                                {isExporting ? (
+                                    <i className="fas fa-spinner fa-spin"></i>
+                                ) : (
+                                    <i className="fas fa-download"></i>
+                                )}
+                                {isExporting ? 'Exporting...' : 'Export Logs'}
                             </button>
                         </div>
                     </div>
@@ -118,7 +131,7 @@ function Movies() {
                         <i className="fas fa-search"></i>
                         <input
                             type="text"
-                            placeholder="Search movies..."
+                            placeholder="Search by Admin Name, Email, or Target..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -126,40 +139,26 @@ function Movies() {
                     <div className="filter-group d-flex gap-2">
                         <div className="filter-dropdown w-100">
                             <select
-                                className="genre-filter w-100 h-100"
-                                value={selectedGenre}
-                                onChange={(e) => setSelectedGenre(e.target.value)}>
-                                <option value="all">All Genres</option>
-
-                                {/* FIX: Keep selected genre in dropdown even if no movies exist */}
-                                {selectedGenre !== 'all' && !genres.includes(selectedGenre) && (
-                                    <option value={selectedGenre}>{selectedGenre}</option>
-                                )}
-
-                                {genres.map((genre) => (
-                                    <option value={genre} key={genre}>
-                                        {genre}
+                                className="w-100 h-100"
+                                value={selectedAction}
+                                onChange={(e) => setSelectedAction(e.target.value)}>
+                                <option value="all">All Actions</option>
+                                {availableActions.map((action) => (
+                                    <option value={action} key={action}>
+                                        {action}
                                     </option>
                                 ))}
                             </select>
                         </div>
                         <div className="filter-dropdown w-100">
                             <select
-                                className="year-filter w-100 h-100"
-                                value={selectedYear}
-                                onChange={(e) => setSelectedYear(e.target.value)}>
-                                <option value="all">All Years</option>
-
-                                {/* FIX: Keep selected year in dropdown even if no movies exist */}
-                                {selectedYear !== 'all' && !years.some(y => String(y) === String(selectedYear)) && (
-                                    <option value={selectedYear}>{selectedYear}</option>
-                                )}
-
-                                {years.map((year) => (
-                                    <option value={year} key={year}>
-                                        {year}
-                                    </option>
-                                ))}
+                                className="w-100 h-100"
+                                value={selectedTime}
+                                onChange={(e) => setSelectedTime(e.target.value)}>
+                                <option value="all">All Time</option>
+                                <option value="7days">Last 7 Days</option>
+                                <option value="30days">Last 30 Days</option>
+                                <option value="1year">Last 1 Year</option>
                             </select>
                         </div>
                     </div>
@@ -173,43 +172,32 @@ function Movies() {
                     <table className="movie-table">
                         <thead>
                             <tr>
-                                <th>Poster</th>
-                                <th>Name</th>
-                                <th>Genre</th>
-                                <th>Year</th>
-                                <th>Ratings</th>
-                                <th>Runtime</th>
-                                <th>Actions</th>
+                                <th>Admin_Details</th>
+                                <th>Action_Performed</th>
+                                <th>Target_Entity</th>
+                                <th>Date_&_Time</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {movies.map((movie) => (
-                                <MovieList
-                                    movieData={movie}
-                                    key={movie._id}
-                                    onEdit={setEditModalActive}
-                                    onDelete={setDeleteModalActive}
-                                    setMovie={setMovieDetails}
-                                    setDelete={setDeleteId}
-                                />
+                            {logs.map((log) => (
+                                <ActivityList logData={log} key={log._id} />
                             ))}
                         </tbody>
                     </table>
                 </div>
-
                 <div
                     className="empty-state mt-4"
-                    style={{ display: emptyState && !loading ? 'flex' : 'none' }}>
-                    <div className="empty-state-icon">
-                        <i className="fas fa-film"></i>
+                    style={{ display: emptyState && !loading ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center' }}>
+                    <div className="empty-state-icon" style={{ fontSize: '2rem', color: 'rgba(255,255,255,0.3)', marginBottom: '10px' }}>
+                        <i className="fas fa-history"></i>
                     </div>
-                    <h3 className="empty-state-title">No Movies Found</h3>
-                    <p className="empty-state-message">
-                        We couldn't find any movies matching your search criteria.
+                    <h3 className="empty-state-title" style={{ fontFamily: '"Oswald", sans-serif', color: '#fff' }}>No Logs Found</h3>
+                    <p className="empty-state-message" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                        No activity matches your current filters.
                     </p>
                 </div>
 
-                {/* Pagination Rendering */}
+                {/* Pagination */}
                 {!emptyState && !loading && totalPages > 0 && (
                     <div className="pagination">
                         {/* Previous Button */}
@@ -273,27 +261,9 @@ function Movies() {
                         </button>
                     </div>
                 )}
-
-                <AddMovieModal
-                    isActive={addModalActive}
-                    onClose={() => setAddModalActive(false)}
-                    refresh={setPageReload}
-                />
-                <EditMovieModal
-                    isActive={editModalActive}
-                    onClose={() => setEditModalActive(false)}
-                    movieData={movieDetails}
-                    refresh={setPageReload}
-                />
-                <DeleteModal
-                    isActive={deleteModalActive}
-                    onClose={() => setDeleteModalActive(false)}
-                    contentId={deleteId}
-                    refresh={setPageReload}
-                />
             </main>
         </div>
     );
 }
 
-export default Movies;
+export default Activity;
