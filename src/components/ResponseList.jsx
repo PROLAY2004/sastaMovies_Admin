@@ -56,7 +56,7 @@ function ResponseList({ data, setResponses, adminName, statusFilter }) {
                     {data.message}
                 </span>
             </td>
-            <td>{formatDate(data.createdAt)}</td>
+            <td style={{ minWidth: '250px' }}>{formatDate(data.createdAt)}</td>
             <td>
                 <span className={`status-badge ${data.isRead ? 'viewed' : 'new'}`}>
                     {data.isRead ? 'Viewed' : 'New'}
