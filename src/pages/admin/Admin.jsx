@@ -97,7 +97,7 @@ function Admin() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <div className="filter-group d-flex gap-2">
+                    <div className="filter-group d-flex flex-row w-100 gap-2">
                         {/* Status Dropdown */}
                         <div className="filter-dropdown w-100">
                             <select

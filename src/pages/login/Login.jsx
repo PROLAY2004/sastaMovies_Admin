@@ -38,13 +38,16 @@ function Login() {
 		const isLogged = await userLogin(email, otp, setLoading, toast);
 
 		if (isLogged) {
-			navigate('/dashboard', { replace: true });
+			const redirectPath = localStorage.getItem('postLoginRedirect');
+			navigate(redirectPath || '/dashboard', { replace: true });
 		}
 	};
 
 	useEffect(() => {
 		if (isAuthenticated()) {
-			navigate('/dashboard', { replace: true });
+			const redirectPath = localStorage.getItem('postLoginRedirect');
+
+			navigate(redirectPath || '/dashboard', { replace: true });
 		}
 
 		if (timer === 0 || !timerActive) return;
@@ -61,7 +64,8 @@ function Login() {
 			const isLogged = await googleResponse(response, toast);
 
 			if (isLogged) {
-				navigate('/dashboard', { replace: true });
+				const redirectPath = localStorage.getItem('postLoginRedirect');
+				navigate(redirectPath || '/dashboard', { replace: true });
 			}
 		},
 		onError: (err) => {

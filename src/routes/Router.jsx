@@ -11,6 +11,8 @@ import Users from '../pages/users/Users.jsx';
 import Activity from '../pages/activity/Activity.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
 import Admin from '../pages/admin/Admin.jsx';
+import Responses from '../pages/responses/Responses.jsx';
+import ErrorPage from '../components/ErrorPage.jsx';
 
 const router = createBrowserRouter([
 	{
@@ -74,8 +76,17 @@ const router = createBrowserRouter([
 		),
 	},
 	{
+		// Added optional parameter :msg_id? to handle both /responses and /responses/id
+		path: '/responses/:msg_id?',
+		element: (
+			<ProtectedRoute>
+				<Responses />
+			</ProtectedRoute>
+		),
+	},
+	{
 		path: '*',
-		element: <h1>No page found</h1>,
+		element: <ErrorPage />,
 	},
 ]);
 
