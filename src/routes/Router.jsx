@@ -12,6 +12,7 @@ import Activity from '../pages/activity/Activity.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
 import Admin from '../pages/admin/Admin.jsx';
 import Responses from '../pages/responses/Responses.jsx';
+import ErrorPage from '../components/ErrorPage.jsx';
 
 const router = createBrowserRouter([
 	{
@@ -85,7 +86,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '*',
-		element: <h1>No page found</h1>,
+		element: <ErrorPage />,
 	},
 ]);
 
