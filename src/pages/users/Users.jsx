@@ -123,7 +123,7 @@ function Users() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <div className="filter-group d-flex gap-2">
+                    <div className="filter-group d-flex flex-row w-100 gap-2">
                         <div className="filter-dropdown w-100">
                             <select
                                 className="status-filter w-100 h-100"

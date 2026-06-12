@@ -45,6 +45,10 @@ function Sidebar({ active, adminDetails }) {
                     <i className="fas fa-users"></i>
                     <span>Users</span>
                 </NavLink>
+                <NavLink to="/responses" className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}>
+                    <i className="fas fa-comments"></i>
+                    <span>Responses</span>
+                </NavLink>
                 <NavLink to="/activity" className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}>
                     <i className="fas fa-history"></i>
                     <span>History</span>

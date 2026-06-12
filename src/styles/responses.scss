@@ -1,0 +1,395 @@
+@import './common/root';
+
+/* =========================================
+   Base Layout (Table, Search, Pagination)
+   ========================================= */
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.list-title {
+    font-family: "Oswald", sans-serif;
+    font-size: 1.75rem;
+}
+
+/* Search & Filter */
+.search-filter {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.search-box {
+    flex: 2;
+    min-width: 250px;
+    position: relative;
+
+    input {
+        width: 100%;
+        padding: 0.85rem 1rem 0.85rem 2.8rem;
+        background-color: $bg-dark;
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: white;
+        font-family: "Roboto Condensed", sans-serif;
+        transition: all 0.3s;
+
+        &:focus {
+            border-color: $secondary-color;
+            box-shadow: 0 0 0 3px rgba(158, 230, 0, 0.1);
+        }
+    }
+
+    i {
+        position: absolute;
+        left: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-muted;
+    }
+}
+
+.filter-group {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    min-width: 300px;
+}
+
+.filter-dropdown select {
+    padding: 0.85rem 1rem;
+    background-color: $bg-dark;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: white;
+    font-family: "Roboto Condensed", sans-serif;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    cursor: pointer;
+
+    &:focus {
+        border-color: $secondary-color;
+    }
+}
+
+/* Table Container */
+.movie-table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+
+    /* Clean horizontal scrollbar for the table only */
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $primary-color;
+        border-radius: 4px;
+    }
+}
+
+.movie-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+        text-align: left;
+        padding: 1rem;
+        background-color: #333333;
+        font-family: "Oswald", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid #222;
+        vertical-align: middle;
+    }
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+
+    .page-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0.75rem !important;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background-color: #222222 !important;
+        color: #eee !important;
+        border: none !important;
+        text-decoration: none;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &:hover:not(.disabled):not(.active) {
+            background-color: #333 !important;
+        }
+
+        &.active {
+            background-color: transparent !important;
+            color: $secondary-color !important;
+            font-weight: bold;
+            border: 1px solid $secondary-color !important;
+        }
+
+        &.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    text-align: center;
+
+    .empty-state-icon {
+        font-size: 3rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-message {
+        color: $text-muted;
+    }
+}
+
+/* =========================================
+   Responses Specific UI
+   ========================================= */
+
+/* Typography Utilities */
+.font-weight-bold {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, 0.502) !important;
+    font-size: 0.85rem;
+}
+
+/* Mailto Link */
+.mailto-link {
+    color: rgba(255, 255, 255, 0.502);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+    display: block;
+    margin-top: 4px;
+
+    &:hover {
+        color: #3399ff;
+        text-decoration: underline;
+    }
+}
+
+/* Message Preview */
+.message-preview {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #cccccc;
+    font-size: 0.95rem;
+    display: inline-block;
+}
+
+/* Badges */
+.status-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &.new {
+        background-color: rgba(255, 77, 77, 0.2);
+        color: #ff4d4d;
+        border: 1px solid rgba(255, 77, 77, 0.4);
+    }
+
+    &.viewed {
+        background-color: rgba(158, 230, 0, 0.2);
+        color: $secondary-color;
+        border: 1px solid rgba(158, 230, 0, 0.4);
+    }
+}
+
+/* Action Icons */
+.action-cell {
+    white-space: nowrap;
+}
+
+.action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+
+    &.view {
+        background-color: rgba(51, 153, 255, 0.2);
+        color: #3399ff;
+
+        &:hover {
+            background-color: rgba(51, 153, 255, 0.3);
+        }
+    }
+
+    &.read {
+        background-color: rgba(158, 230, 0, 0.2);
+        color: $secondary-color;
+
+        &:hover {
+            background-color: rgba(158, 230, 0, 0.3);
+        }
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: rgba(255, 255, 255, 0.3) !important;
+    }
+}
+
+/* =========================================
+   View Message Modal
+   ========================================= */
+
+.message-modal-content {
+    background: #0f0f0f;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #222;
+    margin-bottom: 15px;
+}
+
+.message-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #333;
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        span.meta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: $secondary-color;
+            font-weight: 600;
+        }
+
+        span.meta-value {
+            font-size: 14px;
+            color: #fff;
+        }
+    }
+}
+
+.message-body {
+    background: #181818;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 3px solid $secondary-color;
+
+    p {
+        color: #ddd;
+        font-size: 15px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        margin: 0;
+        word-break: break-word;
+        /* Prevents long unbreakable text from breaking out */
+    }
+}
+
+.visited-info {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: rgba(51, 153, 255, 0.05);
+    border: 1px solid rgba(51, 153, 255, 0.2);
+    border-radius: 8px;
+
+    i {
+        color: #3399ff;
+        font-size: 18px;
+    }
+
+    .visited-text {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.7);
+
+        strong {
+            color: #fff;
+            font-weight: 500;
+        }
+    }
+}
+
+/* =========================================
+   Responsive Design
+   ========================================= */
+@media (max-width: 768px) {
+    .search-filter {
+        flex-direction: column;
+    }
+
+    .search-box,
+    .filter-group {
+        width: 100%;
+    }
+
+    .filter-group {
+        flex-direction: column;
+    }
+
+    .movie-table th,
+    .movie-table td {
+        padding: 0.75rem;
+    }
+}
