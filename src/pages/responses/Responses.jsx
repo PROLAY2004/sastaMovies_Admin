@@ -11,6 +11,7 @@ import ResponseList from '../../components/ResponseList.jsx';
 import ViewMessageModal from '../../components/modals/ViewMessageModal.jsx';
 import displayResponses from './fetchResponses.js';
 import fetchSingleMessage from './fetchSingleMessage.js';
+import markReadStatus from './markRead.js'; // Added to ensure DB syncs when deep linking
 
 function Responses() {
     const navigate = useNavigate();
@@ -46,6 +47,7 @@ function Responses() {
         setCurrentPage(1);
     }, [debouncedSearch, statusFilter, userTypeFilter]);
 
+    // Keep empty state in sync with optimistic UI updates
     useEffect(() => {
         if (!loading) {
             setEmptyState(responses.length === 0);
@@ -74,30 +76,61 @@ function Responses() {
     }, [debouncedSearch, statusFilter, userTypeFilter, currentPage]);
 
     // --- DEEP LINK & MODAL LOGIC ---
-    useEffect(() => {
-        if (msg_id) {
-            const existingMessage = responses.find(r => r._id === msg_id);
 
-            if (existingMessage) {
-                let displayData = { ...existingMessage };
-                if (!existingMessage.isRead) {
-                    displayData.isRead = true;
-                    displayData.readBy = adminDetails.name;
-                    displayData.updatedAt = new Date().toISOString();
-                }
-                setActiveMessage(displayData);
-            } else {
-                const fetchMessageDirectly = async () => {
-                    const data = await fetchSingleMessage(msg_id, navigate, toast, setModalLoading);
-                    if (data) setActiveMessage(data);
-                    else navigate('/responses');
-                };
-                fetchMessageDirectly();
-            }
-        } else {
+    // 1. Load data for the modal based on URL
+    useEffect(() => {
+        if (!msg_id) {
             setActiveMessage(null);
+            return;
         }
-    }, [msg_id, responses, adminDetails.name, navigate]);
+
+        const loadModalData = async () => {
+            // If it's already in the table, use that data instantly to avoid loading states
+            const existingMessage = responses.find(r => r._id === msg_id);
+            if (existingMessage) {
+                setActiveMessage({
+                    ...existingMessage,
+                    isRead: true,
+                    readBy: existingMessage.readBy || adminDetails.name,
+                    updatedAt: existingMessage.updatedAt || new Date().toISOString()
+                });
+            } else {
+                // It's not in the current page list, fetch from server
+                const data = await fetchSingleMessage(msg_id, navigate, toast, setModalLoading);
+                if (data) setActiveMessage(data);
+                else navigate('/responses'); // Invalid ID
+            }
+        };
+
+        loadModalData();
+    }, [msg_id]); // Run only when URL changes
+
+    // 2. Keep background list in sync with the viewed message
+    useEffect(() => {
+        if (activeMessage && msg_id) {
+            const listMatch = responses.find(r => r._id === activeMessage._id);
+
+            // If the table still thinks this message is new, update it instantly!
+            if (listMatch && !listMatch.isRead) {
+                setResponses(prev => {
+                    // If filtering by new, make it disappear
+                    if (statusFilter === 'new') {
+                        return prev.filter(msg => msg._id !== activeMessage._id);
+                    }
+                    // Otherwise update it to viewed
+                    return prev.map(msg => msg._id === activeMessage._id ? {
+                        ...msg,
+                        isRead: true,
+                        readBy: activeMessage.readBy || adminDetails.name,
+                        updatedAt: activeMessage.updatedAt || new Date().toISOString()
+                    } : msg);
+                });
+
+                // Trigger the API silently to ensure the database matches the UI
+                markReadStatus(activeMessage._id, navigate, toast);
+            }
+        }
+    }, [activeMessage, responses, statusFilter, msg_id, adminDetails.name, navigate]);
 
     return (
         <div className="admin-container">
@@ -179,10 +212,9 @@ function Responses() {
                     <p className="empty-state-message">We couldn't find any contact responses matching your criteria.</p>
                 </div>
 
-                {/* Pagination Rendering (Updated to match Series/Movies) */}
+                {/* Pagination Rendering */}
                 {!emptyState && !loading && totalPages > 0 && (
                     <div className="pagination">
-                        {/* Previous Button */}
                         <button
                             className={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
                             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -191,49 +223,32 @@ function Responses() {
                             <i className="fas fa-angle-left"></i>
                         </button>
 
-                        {/* Dynamic Pagination with Ellipses */}
                         {(() => {
                             let pages = [];
-
                             if (totalPages <= 5) {
-                                // Show all if 5 or fewer pages
                                 pages = Array.from({ length: totalPages }, (_, i) => i + 1);
                             } else if (currentPage <= 3) {
-                                // Near the start: 1, 2, 3, 4, ..., Last
                                 pages = [1, 2, 3, 4, '...', totalPages];
                             } else if (currentPage >= totalPages - 2) {
-                                // Near the end: 1, ..., Last-2, Last-1, Last
                                 pages = [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
                             } else {
-                                // In the middle: 1, ..., Prev, Current, Next, ..., Last
                                 pages = [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
                             }
 
                             return pages.map((page, index) => {
                                 if (page === '...') {
                                     return (
-                                        <span
-                                            key={`ellipsis-${index}`}
-                                            className="page-link disabled"
-                                            style={{ background: 'transparent', border: 'none', cursor: 'default', color: 'rgba(255,255,255,0.5)' }}>
-                                            ...
-                                        </span>
+                                        <span key={`ellipsis-${index}`} className="page-link disabled" style={{ background: 'transparent', border: 'none', cursor: 'default', color: 'rgba(255,255,255,0.5)' }}>...</span>
                                     );
                                 }
-
                                 return (
-                                    <button
-                                        key={page}
-                                        className={`page-link ${currentPage === page ? 'active' : ''}`}
-                                        onClick={() => setCurrentPage(page)}
-                                        style={{ background: 'transparent', border: 'none' }}>
+                                    <button key={page} className={`page-link ${currentPage === page ? 'active' : ''}`} onClick={() => setCurrentPage(page)} style={{ background: 'transparent', border: 'none' }}>
                                         {page}
                                     </button>
                                 );
                             });
                         })()}
 
-                        {/* Next Button */}
                         <button
                             className={`page-link ${currentPage === totalPages ? 'disabled' : ''}`}
                             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
@@ -245,11 +260,7 @@ function Responses() {
                 )}
             </main>
 
-            {/* Modal driven by URL State */}
-            <ViewMessageModal
-                isActive={!!activeMessage}
-                messageData={activeMessage}
-            />
+            <ViewMessageModal isActive={!!activeMessage} messageData={activeMessage} />
         </div>
     );
 }
