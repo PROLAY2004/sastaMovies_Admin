@@ -36,6 +36,14 @@ function UserList({ user, refresh, setDeleteModalActive, setUserId, setRenewModa
             </td>
             <td className="action-cell">
                 <button
+                    className="action-icon renew"
+                    title="User Analytics"
+                    onClick={() => navigate(`/analytics/${user._id}`)}
+                >
+                    <i className="fas fa-chart-line"></i>
+                </button>
+
+                <button
                     className={`action-icon ${user.isBlocked ? 'unblock' : 'block'}`}
                     onClick={() => handleStatusUpdate(user._id)}
                     title={user.isBlocked ? "Unblock User" : "Block User"}

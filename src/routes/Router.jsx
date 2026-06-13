@@ -13,6 +13,7 @@ import Dashboard from '../pages/dashboard/Dashboard.jsx';
 import Admin from '../pages/admin/Admin.jsx';
 import Responses from '../pages/responses/Responses.jsx';
 import ErrorPage from '../components/ErrorPage.jsx';
+import Analytics from '../pages/analytics/Analytics.jsx';
 
 const router = createBrowserRouter([
 	{
@@ -74,6 +75,14 @@ const router = createBrowserRouter([
 				<Admin />
 			</ProtectedRoute>
 		),
+	},
+	{
+		path: '/analytics/:userId',
+		element: (
+			<ProtectedRoute>
+				<Analytics />
+			</ProtectedRoute>
+		)
 	},
 	{
 		// Added optional parameter :msg_id? to handle both /responses and /responses/id

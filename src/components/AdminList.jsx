@@ -35,6 +35,10 @@ function AdminList({ admin, refresh, setAdminId, setSelectedAdminData, setPermis
                 </span>
             </td>
             <td className="action-cell">
+                <button className="action-icon renew" title="User Analytics" onClick={() => navigate(`/analytics/${admin._id}`)}>
+                    <i className="fas fa-chart-line"></i>
+                </button>
+
                 {/* Block/Unblock */}
                 <button className={`action-icon ${admin.isBlocked ? 'unblock' : 'block'}`} onClick={() => handleStatusUpdate(admin._id)} title={admin.isBlocked ? "Unblock Admin" : "Block Admin"}>
                     {loading ? <div className="spinner-border" style={{ width: '20px', height: '20px' }}></div> : <i className={`fas ${admin.isBlocked ? 'fa-unlock' : 'fa-ban'}`}></i>}
