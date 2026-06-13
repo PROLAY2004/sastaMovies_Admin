@@ -8,6 +8,10 @@ export default class Api {
 
 			return res;
 		} catch (err) {
+			if (err.message === 'Failed to fetch') {
+				throw new Error('Something went wrong.');
+			}
+			
 			throw new Error(err);
 		}
 	};
@@ -25,6 +29,10 @@ export default class Api {
 
 			return res;
 		} catch (err) {
+			if (err.message === 'Failed to fetch') {
+				throw new Error('Something went wrong.');
+			}
+
 			throw new Error(err);
 		}
 	};
@@ -42,6 +50,10 @@ export default class Api {
 
 			return res;
 		} catch (err) {
+			if (err.message === 'Failed to fetch') {
+				throw new Error('Something went wrong.');
+			}
+
 			throw new Error(err);
 		}
 	};
@@ -59,6 +71,10 @@ export default class Api {
 
 			return res;
 		} catch (err) {
+			if (err.message === 'Failed to fetch') {
+				throw new Error('Something went wrong.');
+			}
+
 			throw new Error(err);
 		}
 	};
@@ -76,7 +92,12 @@ export default class Api {
 
 			return res;
 		} catch (err) {
+			if (err.message === 'Failed to fetch') {
+				throw new Error('Something went wrong.');
+			}
+
 			throw new Error(err);
 		}
 	};
 }
+

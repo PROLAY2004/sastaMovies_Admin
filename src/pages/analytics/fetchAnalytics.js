@@ -27,11 +27,11 @@ export const fetchAnalyticsData = async (
 		} else {
 			toast.error(result.message, { theme: 'dark' });
 			setLoading(false);
-			return null;
+			return navigate(-1);
 		}
 	} catch (err) {
 		toast.error(err.message, { theme: 'dark' });
 		setLoading(false);
-		return null;
+		return navigate(-1);
 	}
 };
