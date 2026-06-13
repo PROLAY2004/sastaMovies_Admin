@@ -172,9 +172,6 @@ function Analytics() {
 
                 <header className="analytics-header mb-4">
                     <div className="user-title-group">
-                        <button className="action-btn icon-only" onClick={() => navigate(-1)}>
-                            <i className="fas fa-arrow-left"></i>
-                        </button>
                         <div className="header-info">
                             <h1 className="list-title">{userInfo.name}'s Analytics</h1>
                             <div className="user-meta-info">
@@ -331,7 +328,7 @@ function Analytics() {
                                                     {stream.isCompleted ? (
                                                         <span className="status-badge active">Completed</span>
                                                     ) : (
-                                                        <span className="status-badge expired">In Progress</span>
+                                                        <span className="status-badge expired">In_Progress</span>
                                                     )}
                                                 </td>
                                             </tr>
